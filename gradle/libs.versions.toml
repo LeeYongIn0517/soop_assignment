@@ -11,6 +11,10 @@ composeBom = "2024.04.01"
 hilt-nav-compose-version = "1.0.0"
 hilt-version = "2.48.1"
 hilt-viewmodel-version = "1.0.0-alpha03"
+okhttp3-version = "4.12.0"
+retrofit-version = "2.9.0"
+sandwich-version = "1.3.5"
+kotlinx-version = "1.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,10 +35,16 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-version" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-nav-compose-version" }
 hilt-viewmodel = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt-viewmodel-version" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit-version" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit-version" }
+sandwich = { group = "com.github.skydoves", name = "sandwich", version.ref = "sandwich-version" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3-version" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-version" }
 
 [bundles]
 hilt = ["hilt-android", "hilt-navigation-compose"]
 hilt-kapt = ["hilt-android-compiler","hilt-viewmodel"]
+network = ["retrofit", "retrofit-gson", "sandwich", "logging-interceptor", "kotlinx-serialization-json"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

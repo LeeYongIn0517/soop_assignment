@@ -51,6 +51,7 @@ android {
 dependencies {
     implementation(libs.bundles.hilt)
     kapt(libs.bundles.hilt.kapt)
+    implementation(libs.bundles.network)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
