@@ -1,8 +1,14 @@
+import java.util.*
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android.gradle)
     kotlin("kapt")
+}
+
+val localProperties = Properties().apply {
+    load(project.rootProject.file("./local.properties").inputStream())
 }
 
 android {
@@ -20,6 +26,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "TOKEN", localProperties.getProperty("TOKEN"))
     }
 
     buildTypes {
@@ -37,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
