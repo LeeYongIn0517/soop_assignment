@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android.gradle)
+    kotlin("kapt")
 }
 
 android {
@@ -47,6 +49,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.bundles.hilt)
+    kapt(libs.bundles.hilt.kapt)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
