@@ -1,9 +1,9 @@
 package com.soop_assignment.app.data.service
 
-import com.skydoves.sandwich.ApiResponse
-import com.soop_assignment.app.data.model.GitHubOwner
-import com.soop_assignment.app.data.model.GitHubRepo
-import com.soop_assignment.app.data.model.GitHubSearchResponse
+import com.soop_assignment.app.data.model.OwnerAllData
+import com.soop_assignment.app.data.model.RepoMetaData
+import com.soop_assignment.app.data.model.RepoWithoutScore
+import com.soop_assignment.app.data.model.SearchResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,23 +11,23 @@ import retrofit2.http.Query
 
 interface GitHubApiService {
     @GET("search/repositories")
-    suspend fun searchRepositories(
+    fun searchRepositories(
         @Query("q") query: String
-    ): Response<GitHubSearchResponse>
+    ): Response<SearchResponse>
 
     @GET("repos/{owner}/{repo}")
-    suspend fun getRepository(
+    fun getRepository(
         @Path("owner") owner: String,
         @Path("repo") repo: String
-    ): Response<GitHubRepo>
+    ): Response<RepoMetaData>
 
     @GET("users/{username}/repos")
-    suspend fun getUserRepositories(
+    fun getUserRepositories(
         @Path("username") username: String
-    ): Response<List<GitHubRepo>>
+    ): Response<List<RepoWithoutScore>>
 
     @GET("users/{username}")
-    suspend fun getUserInfo(
+    fun getUserInfo(
         @Path("username") username: String
-    ): Response<GitHubOwner>
+    ): Response<OwnerAllData>
 }

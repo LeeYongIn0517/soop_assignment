@@ -2,7 +2,7 @@ package com.soop_assignment.app.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class GitHubOwner(
+data class Owner(
     val login: String,
     val id: Int,
     @SerializedName("node_id") val nodeId: String,

@@ -2,7 +2,7 @@ package com.soop_assignment.app.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class GitHubLicense(
+data class License(
     val key: String,
     val name: String,
     val url: String?,
