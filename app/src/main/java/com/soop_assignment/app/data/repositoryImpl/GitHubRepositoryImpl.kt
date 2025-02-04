@@ -1,7 +1,8 @@
 package com.soop_assignment.app.data.repositoryImpl
 
-import com.soop_assignment.app.data.model.Owner
-import com.soop_assignment.app.data.model.RepoWithScore
+import com.soop_assignment.app.data.model.OwnerAllData
+import com.soop_assignment.app.data.model.RepoMetaData
+import com.soop_assignment.app.data.model.RepoWithoutScore
 import com.soop_assignment.app.data.model.SearchResponse
 import com.soop_assignment.app.data.service.GitHubApiService
 import com.soop_assignment.app.domain.repository.GitHubRepository
@@ -12,15 +13,15 @@ class GitHubRepositoryImpl @Inject constructor(private val gitHubApiService: Git
         return gitHubApiService.searchRepositories(query).body()
     }
 
-    override fun getRepository(owner: String, repo: String): RepoWithScore? {
+    override fun getRepository(owner: String, repo: String): RepoMetaData? {
         return gitHubApiService.getRepository(owner, repo).body()
     }
 
-    override fun getUserRepositories(username: String): List<RepoWithScore>? {
+    override fun getUserRepositories(username: String): List<RepoWithoutScore>? {
         return gitHubApiService.getUserRepositories(username).body()
     }
 
-    override fun getUserInfo(username: String): Owner? {
+    override fun getUserInfo(username: String): OwnerAllData? {
         return gitHubApiService.getUserInfo(username).body()
     }
 }
