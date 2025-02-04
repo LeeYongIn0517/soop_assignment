@@ -1,12 +1,13 @@
 package com.soop_assignment.app.domain.repository
 
-import com.soop_assignment.app.data.model.GitHubOwner
-import com.soop_assignment.app.data.model.GitHubRepo
-import com.soop_assignment.app.data.model.GitHubSearchResponse
+import com.soop_assignment.app.data.model.OwnerAllData
+import com.soop_assignment.app.data.model.RepoMetaData
+import com.soop_assignment.app.data.model.RepoWithoutScore
+import com.soop_assignment.app.data.model.SearchResponse
 
 interface GitHubRepository {
-    suspend fun searchRepositories(query: String): GitHubSearchResponse?
-    suspend fun getRepository(owner: String, repo: String): GitHubRepo?
-    suspend fun getUserRepositories(username: String): List<GitHubRepo>?
-    suspend fun getUserInfo(username: String): GitHubOwner?
+    fun searchRepositories(query: String): SearchResponse?
+    fun getRepository(owner: String, repo: String): RepoMetaData?
+    fun getUserRepositories(username: String): List<RepoWithoutScore>?
+    fun getUserInfo(username: String): OwnerAllData?
 }
