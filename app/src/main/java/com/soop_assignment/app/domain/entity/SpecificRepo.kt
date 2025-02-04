@@ -1,8 +1,7 @@
 package com.soop_assignment.app.domain.entity
 
-data class Repo(
+data class SpecificRepo(
     val userImageUrl:String,
-    val userName:String,
     val repositoryName:String,
     val stars:Int,
     val watchers:Int,
