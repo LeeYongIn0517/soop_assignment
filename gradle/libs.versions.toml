@@ -1,6 +1,6 @@
 [versions]
 agp = "8.6.0-alpha07"
-kotlin = "1.9.0"
+kotlin = "1.9.21"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -43,7 +43,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 [bundles]
 hilt = ["hilt-android", "hilt-navigation-compose"]
-hilt-kapt = ["hilt-android-compiler","hilt-viewmodel"]
+hilt-kapt = ["hilt-android-compiler", "hilt-viewmodel"]
 network = ["retrofit", "retrofit-gson", "sandwich", "logging-interceptor", "kotlinx-serialization-json"]
 
 [plugins]
