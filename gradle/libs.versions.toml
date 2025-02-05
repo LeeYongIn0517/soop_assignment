@@ -15,6 +15,7 @@ okhttp3-version = "4.12.0"
 retrofit-version = "2.9.0"
 sandwich-version = "1.3.5"
 kotlinx-version = "1.5.0"
+lifecycleRuntimeComposeAndroid = "2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,11 +41,13 @@ retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ver
 sandwich = { group = "com.github.skydoves", name = "sandwich", version.ref = "sandwich-version" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3-version" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-version" }
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 
 [bundles]
 hilt = ["hilt-android", "hilt-navigation-compose"]
 hilt-kapt = ["hilt-android-compiler", "hilt-viewmodel"]
 network = ["retrofit", "retrofit-gson", "sandwich", "logging-interceptor", "kotlinx-serialization-json"]
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
