@@ -1,6 +1,6 @@
 package com.soop_assignment.app.domain.useCase
 
-import com.soop_assignment.app.domain.entity.SpecificRepo
+import com.soop_assignment.app.domain.model.SpecificRepo
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 

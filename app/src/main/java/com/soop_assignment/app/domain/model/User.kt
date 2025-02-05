@@ -1,4 +1,4 @@
-package com.soop_assignment.app.domain.entity
+package com.soop_assignment.app.domain.model
 
 data class User(
     val userImageUrl: String,
