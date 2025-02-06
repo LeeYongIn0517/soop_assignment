@@ -46,7 +46,11 @@ fun RepositoryScreen(
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(1f)) { innerPadding ->
-        Column(modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f)) {
+        Column(
+            modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             TopAppBar(
                 title = {},
                 navigationIcon = {
@@ -59,7 +63,13 @@ fun RepositoryScreen(
                     )
                 })
             if (uiState.value.isLoading) {
-                Text("로딩중", style = Typography.titleMedium)
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.3f))
+                }
             } else {
                 if (showBottomSheet) {
                     ModalBottomSheet(

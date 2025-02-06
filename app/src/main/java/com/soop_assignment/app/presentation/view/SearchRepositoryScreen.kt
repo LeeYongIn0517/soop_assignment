@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -14,11 +15,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.soop_assignment.app.R
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
@@ -26,7 +30,7 @@ import com.soop_assignment.app.presentation.viewmodel.SearchViewModel
 import com.soop_assignment.app.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun SearchRepositoryScreen(
     navigateToRepository: (userName: String, repository: String) -> Unit,
@@ -77,11 +81,19 @@ fun SearchRepositoryScreen(
                                 )
                             )
                         }) {
-                        Text(
-                            text = it.repositoryName,
-                            style = Typography.bodySmall,
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        )
+                        Row {
+                            GlideImage(
+                                model = it.userImageUrl,
+                                contentDescription = null,
+                                modifier = Modifier.background(color = Color.Transparent, shape = CircleShape)
+                                    .fillMaxWidth(0.1f).padding(end = 16.dp).clip(CircleShape)
+                            )
+                            Text(
+                                text = it.userName,
+                                style = Typography.bodySmall,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                        }
                         Text(
                             text = it.repositoryName,
                             style = Typography.titleMedium,
