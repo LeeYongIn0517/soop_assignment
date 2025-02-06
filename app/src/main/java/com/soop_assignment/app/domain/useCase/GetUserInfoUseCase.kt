@@ -1,8 +1,7 @@
 package com.soop_assignment.app.domain.useCase
 
-import com.soop_assignment.app.domain.model.Languages
-import com.soop_assignment.app.domain.model.User
 import com.soop_assignment.app.data.entity.RepoWithoutScore
+import com.soop_assignment.app.domain.model.User
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
@@ -25,10 +24,10 @@ class GetUserInfoUseCase @Inject constructor(private val repository: GitHubRepos
         }
     }
 
-    fun getLanguage(repositories: List<RepoWithoutScore>?): Languages {
+    fun getLanguage(repositories: List<RepoWithoutScore>?): String {
         val languages = repositories?.map {
             it.language ?: ""
-        } ?: emptyList()
-        return Languages(languages)
+        }
+        return languages?.distinct()?.joinToString(", ") ?: ""
     }
 }
