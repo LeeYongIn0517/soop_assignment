@@ -5,7 +5,7 @@ data class User(
     val userName: String,
     val followers: Int,
     val following: Int,
-    val languages: Languages,
+    val languages: String,
     val repositories: Int,
     val bio: String
 )

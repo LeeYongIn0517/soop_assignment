@@ -72,7 +72,7 @@ data class RepoWithoutScore(
     @SerializedName("archived") val archived: Boolean,
     @SerializedName("disabled") val disabled: Boolean,
     @SerializedName("open_issues_count") val openIssuesCount: Int,
-    @SerializedName("license") val license: String?,
+    @SerializedName("license") val license: License?,
     @SerializedName("allow_forking") val allowForking: Boolean,
     @SerializedName("is_template") val isTemplate: Boolean,
     @SerializedName("web_commit_signoff_required") val webCommitSignoffRequired: Boolean,

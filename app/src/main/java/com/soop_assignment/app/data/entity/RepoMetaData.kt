@@ -3,7 +3,7 @@ package com.soop_assignment.app.data.entity
 import com.google.gson.annotations.SerializedName
 
 data class RepoMetaData(
-    @SerializedName("id") val id: Int,
+    @SerializedName("id") val id: Long,
     @SerializedName("node_id") val nodeId: String,
     @SerializedName("name") val name: String,
     @SerializedName("full_name") val fullName: String,
@@ -21,9 +21,9 @@ data class RepoMetaData(
     @SerializedName("clone_url") val cloneUrl: String,
     @SerializedName("svn_url") val svnUrl: String,
     @SerializedName("homepage") val homepage: String?,
-    @SerializedName("size") val size: Int,
-    @SerializedName("stargazers_count") val stargazersCount: Int,
-    @SerializedName("watchers_count") val watchersCount: Int,
+    @SerializedName("size") val size: Long,
+    @SerializedName("stargazers_count") val stargazersCount: Long,
+    @SerializedName("watchers_count") val watchersCount: Long,
     @SerializedName("language") val language: String?,
     @SerializedName("has_issues") val hasIssues: Boolean,
     @SerializedName("has_projects") val hasProjects: Boolean,
@@ -31,18 +31,18 @@ data class RepoMetaData(
     @SerializedName("has_wiki") val hasWiki: Boolean,
     @SerializedName("has_pages") val hasPages: Boolean,
     @SerializedName("has_discussions") val hasDiscussions: Boolean,
-    @SerializedName("forks_count") val forksCount: Int,
+    @SerializedName("forks_count") val forksCount: Long,
     @SerializedName("mirror_url") val mirrorUrl: String?,
     @SerializedName("archived") val isArchived: Boolean,
     @SerializedName("disabled") val isDisabled: Boolean,
-    @SerializedName("open_issues_count") val openIssuesCount: Int,
-    @SerializedName("license") val license: String?,
+    @SerializedName("open_issues_count") val openIssuesCount: Long,
+    @SerializedName("license") val license: License?,
     @SerializedName("allow_forking") val allowForking: Boolean,
     @SerializedName("is_template") val isTemplate: Boolean,
     @SerializedName("visibility") val visibility: String,
-    @SerializedName("forks") val forks: Int,
-    @SerializedName("open_issues") val openIssues: Int,
-    @SerializedName("watchers") val watchers: Int,
+    @SerializedName("forks") val forks: Long,
+    @SerializedName("open_issues") val openIssues: Long,
+    @SerializedName("watchers") val watchers: Long,
     @SerializedName("default_branch") val defaultBranch: String,
     @SerializedName("permissions") val permissions: Permissions,
     @SerializedName("temp_clone_token") val tempCloneToken: String,
@@ -58,8 +58,8 @@ data class RepoMetaData(
     @SerializedName("merge_commit_message") val mergeCommitMessage: String,
     @SerializedName("merge_commit_title") val mergeCommitTitle: String,
     @SerializedName("security_and_analysis") val securityAndAnalysis: SecurityAndAnalysis,
-    @SerializedName("network_count") val networkCount: Int,
-    @SerializedName("subscribers_count") val subscribersCount: Int
+    @SerializedName("network_count") val networkCount: Long,
+    @SerializedName("subscribers_count") val subscribersCount: Long
 )
 
 
