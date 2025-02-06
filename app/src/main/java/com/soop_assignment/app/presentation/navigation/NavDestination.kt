@@ -22,7 +22,7 @@ fun NavGraphBuilder.searchRepositoryScreen(navigateToRepository: (userName: Stri
 
 fun NavGraphBuilder.repositoryScreen(navigateToBack: () -> Unit) {
     composable(
-        route = "${Route.Repository}/userName/repository",
+        route = "${Route.Repository}/{userName}/{repository}",
         arguments = listOf(navArgument("userName") { type = NavType.StringType },
             navArgument("repository") { type = NavType.StringType })
     ) {
