@@ -1,4 +1,4 @@
-package com.soop_assignment.app.data
+package com.soop_assignment.app.data.di
 
 import com.google.gson.GsonBuilder
 import com.soop_assignment.app.BuildConfig

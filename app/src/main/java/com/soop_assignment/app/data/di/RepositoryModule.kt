@@ -1,4 +1,4 @@
-package com.soop_assignment.app.data
+package com.soop_assignment.app.data.di
 
 import com.soop_assignment.app.data.repositoryImpl.GitHubRepositoryImpl
 import com.soop_assignment.app.domain.repository.GitHubRepository
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface RepositoryModule {
     @Binds
     @Singleton
-    fun bindGitHubRepositoryImpl(repositoryImpl: GitHubRepositoryImpl):GitHubRepository
+    fun bindGitHubRepositoryImpl(repositoryImpl: GitHubRepositoryImpl): GitHubRepository
 }
