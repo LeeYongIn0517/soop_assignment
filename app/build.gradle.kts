@@ -62,6 +62,7 @@ dependencies {
     kapt(libs.bundles.hilt.kapt)
     implementation(libs.bundles.network)
     implementation(libs.androidx.navigation)
+    implementation(libs.glide)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
