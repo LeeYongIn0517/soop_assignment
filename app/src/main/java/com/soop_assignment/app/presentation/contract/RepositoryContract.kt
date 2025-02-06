@@ -1,5 +1,6 @@
 package com.soop_assignment.app.presentation.contract
 
+import com.soop_assignment.app.domain.model.ErrorMessage
 import com.soop_assignment.app.domain.model.SpecificRepo
 import com.soop_assignment.app.domain.model.User
 
@@ -11,6 +12,8 @@ sealed interface RepositoryEvent : UiEvent {
 
 data class RepositoryState(
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
+    val errorMessage: ErrorMessage? = null,
     val repository: SpecificRepo? = null,
     val user: User? = null,
     val isModalExpanded: Boolean = false

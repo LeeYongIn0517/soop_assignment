@@ -1,7 +1,6 @@
 package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.soop_assignment.app.domain.entity.ApiResponse
 import com.soop_assignment.app.domain.useCase.GetRepositoryUseCase
 import com.soop_assignment.app.domain.useCase.GetUserInfoUseCase
 import com.soop_assignment.app.presentation.contract.RepositoryEffect
@@ -37,11 +36,12 @@ class RepositoryViewModel @Inject constructor(
     private fun getRepository(userName: String, repository: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val repositoryResult = getRepositoryUseCase(userName = userName, repo = repository)
-            when (repositoryResult) {
-                is ApiResponse.Error -> {}
-                is ApiResponse.Exception -> {}
-                is ApiResponse.Success -> {
-                    setState { copy(isLoading = false, repository = repositoryResult.data) }
+
+            handleError(apiResponse = repositoryResult) { isLoading, isError, errorMessage, data ->
+                when {
+                    isError -> this.copy(isLoading, isError, errorMessage, repository = data)
+                    data != null -> this.copy(isLoading, isError, errorMessage, repository = data)
+                    else -> this
                 }
             }
 
@@ -51,11 +51,11 @@ class RepositoryViewModel @Inject constructor(
     private fun getUser(userName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val userResult = getUserInfoUseCase(userName = userName)
-            when (userResult) {
-                is ApiResponse.Error -> {}
-                is ApiResponse.Exception -> {}
-                is ApiResponse.Success -> {
-                    setState { copy(isLoading = false, user = userResult.data) }
+            handleError(apiResponse = userResult) { isLoading, isError, errorMessage, data ->
+                when {
+                    isError -> this.copy(isLoading, isError, errorMessage, user = data)
+                    data != null -> this.copy(isLoading, isError, errorMessage, user = data)
+                    else -> this
                 }
             }
         }
