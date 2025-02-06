@@ -42,9 +42,7 @@ class GetUserInfoUseCase @Inject constructor(private val repository: GitHubRepos
     }
 
     fun getLanguage(repositories: List<RepoWithoutScore>?): String {
-        val languages = repositories?.map {
-            it.language ?: ""
-        }
-        return languages?.distinct()?.joinToString(", ") ?: ""
+        val languages = repositories?.map { it.language }?.filter { !it.isNullOrBlank() }?.distinct()
+        return languages?.joinToString(", ") ?: ""
     }
 }
