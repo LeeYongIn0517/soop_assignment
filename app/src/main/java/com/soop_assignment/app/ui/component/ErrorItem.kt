@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.soop_assignment.app.ui.theme.Typography
 
 @Composable
-fun ErrorMessage(code: Int, message: String) {
+fun ErrorItem(code: Int?, message: String?) {
     Column {
         Text("${code}", style = Typography.titleLarge, color = Color.Gray, modifier = Modifier.padding(bottom = 20.dp))
         Text("${message}:(", style = Typography.bodyLarge, color = Color.Gray)
@@ -21,5 +21,5 @@ fun ErrorMessage(code: Int, message: String) {
 @Preview
 @Composable
 fun ErrorPreview() {
-    ErrorMessage(code = 503, message = "Service unavailable")
+    ErrorItem(code = 503, message = "Service unavailable")
 }
