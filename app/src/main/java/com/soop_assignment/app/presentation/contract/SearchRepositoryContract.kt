@@ -1,6 +1,7 @@
 package com.soop_assignment.app.presentation.contract
 
 import com.soop_assignment.app.domain.model.BriefRepo
+import com.soop_assignment.app.domain.model.ErrorMessage
 
 sealed interface SearchRepositoryEvent : UiEvent {
     data class ClickSearchButton(val text: String) : SearchRepositoryEvent
@@ -9,8 +10,11 @@ sealed interface SearchRepositoryEvent : UiEvent {
 }
 
 data class SearchRepositoryState(
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val errorMessage: ErrorMessage? = null,
     val searchInput: String = "",
-    val searchResult: List<BriefRepo> = emptyList()
+    val searchResult: List<BriefRepo>? = emptyList()
 ) : UiState
 
 sealed interface SearchRepositoryEffect : UiEffect {

@@ -1,7 +1,6 @@
 package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.soop_assignment.app.domain.entity.ApiResponse
 import com.soop_assignment.app.domain.useCase.SearchRepositoriesUseCase
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
@@ -32,6 +31,7 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
             }
 
             is SearchRepositoryEvent.ChangeSearchWord -> {
+                setState { copy(isLoading = true) }
                 searchResult(event.text)
             }
         }
@@ -41,11 +41,22 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
         viewModelScope.launch(Dispatchers.IO) {
             if (text.isNotBlank()) {
                 val searchResult = searchRepositoriesUseCase(text)
-                when (searchResult) {
-                    is ApiResponse.Error -> {}
-                    is ApiResponse.Exception -> {}
-                    is ApiResponse.Success -> setState { copy(searchResult = searchResult.data, searchInput = text) }
+                handleError(apiResponse = searchResult) { isLoading, isError, errorMessage, data ->
+                    when {
+                        isError -> this.copy(isLoading, isError, errorMessage, searchResult = data, searchInput = text)
+                        data != null -> this.copy(
+                            isLoading,
+                            isError,
+                            errorMessage,
+                            searchResult = data,
+                            searchInput = text
+                        )
+
+                        else -> this
+                    }
                 }
+            } else {
+                setState { copy(isLoading = false) }
             }
         }
     }
