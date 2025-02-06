@@ -3,12 +3,12 @@ package com.soop_assignment.app.data.entity
 import com.google.gson.annotations.SerializedName
 
 data class Owner(
-    val login: String,
-    val id: Int,
+    @SerializedName("login") val login: String,
+    @SerializedName("id") val id: Int,
     @SerializedName("node_id") val nodeId: String,
     @SerializedName("avatar_url") val avatarUrl: String,
     @SerializedName("gravatar_id") val gravatarId: String,
-    val url: String,
+    @SerializedName("url") val url: String,
     @SerializedName("html_url") val htmlUrl: String,
     @SerializedName("followers_url") val followersUrl: String,
     @SerializedName("following_url") val followingUrl: String,
