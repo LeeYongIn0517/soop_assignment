@@ -2,6 +2,8 @@ package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soop_assignment.app.domain.entity.ApiResponse
+import com.soop_assignment.app.domain.model.ErrorMessage
 import com.soop_assignment.app.presentation.contract.UiEffect
 import com.soop_assignment.app.presentation.contract.UiEvent
 import com.soop_assignment.app.presentation.contract.UiState
@@ -54,6 +56,42 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             for (effectValue in builder) {
                 _effects.send(effectValue)
             }
+        }
+    }
+
+    protected fun <T> handleError(
+        apiResponse: ApiResponse<T>,
+        reduce: State.(isLoading: Boolean, isError: Boolean, errorMessage: ErrorMessage?, data: T?) -> State
+    ) {
+        val UNKNOWN_ERROR_CODE = 400
+        val UNKNOWN_ERROR_MESSAGE = "원인을 알 수 없는 오류입니다:("
+
+        when (apiResponse) {
+            is ApiResponse.Error -> _uiState.update {
+                it.reduce(
+                    false,
+                    true,
+                    ErrorMessage(
+                        apiResponse.code ?: UNKNOWN_ERROR_CODE,
+                        apiResponse.message ?: UNKNOWN_ERROR_MESSAGE,
+                    ),
+                    null
+                )
+            }
+
+            is ApiResponse.Exception -> _uiState.update {
+                it.reduce(
+                    false,
+                    true,
+                    ErrorMessage(
+                        UNKNOWN_ERROR_CODE,
+                        UNKNOWN_ERROR_MESSAGE,
+                    ),
+                    null
+                )
+            }
+
+            is ApiResponse.Success -> _uiState.update { it.reduce(false, false, null, apiResponse.data) } //성공
         }
     }
 }
