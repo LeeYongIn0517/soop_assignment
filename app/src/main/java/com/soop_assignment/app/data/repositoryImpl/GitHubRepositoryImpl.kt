@@ -1,10 +1,10 @@
 package com.soop_assignment.app.data.repositoryImpl
 
-import com.soop_assignment.app.data.entity.OwnerAllData
-import com.soop_assignment.app.data.entity.RepoMetaData
-import com.soop_assignment.app.data.entity.RepoWithoutScore
-import com.soop_assignment.app.data.entity.SearchResponse
 import com.soop_assignment.app.data.service.GitHubApiService
+import com.soop_assignment.app.domain.entity.OwnerAllData
+import com.soop_assignment.app.domain.entity.RepoMetaData
+import com.soop_assignment.app.domain.entity.RepoWithoutScore
+import com.soop_assignment.app.domain.entity.SearchResponse
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 

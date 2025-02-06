@@ -1,9 +1,9 @@
 package com.soop_assignment.app.data.service
 
-import com.soop_assignment.app.data.entity.OwnerAllData
-import com.soop_assignment.app.data.entity.RepoMetaData
-import com.soop_assignment.app.data.entity.RepoWithoutScore
-import com.soop_assignment.app.data.entity.SearchResponse
+import com.soop_assignment.app.domain.entity.OwnerAllData
+import com.soop_assignment.app.domain.entity.RepoMetaData
+import com.soop_assignment.app.domain.entity.RepoWithoutScore
+import com.soop_assignment.app.domain.entity.SearchResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

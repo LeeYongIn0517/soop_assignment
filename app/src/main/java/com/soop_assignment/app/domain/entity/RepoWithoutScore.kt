@@ -1,8 +1,8 @@
-package com.soop_assignment.app.data.entity
+package com.soop_assignment.app.domain.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class RepoWithScore(
+data class RepoWithoutScore(
     @SerializedName("id") val id: Long,
     @SerializedName("node_id") val nodeId: String,
     @SerializedName("name") val name: String,
@@ -57,9 +57,9 @@ data class RepoWithScore(
     @SerializedName("clone_url") val cloneUrl: String,
     @SerializedName("svn_url") val svnUrl: String,
     @SerializedName("homepage") val homepage: String?,
-    @SerializedName("size") val size: Long,
-    @SerializedName("stargazers_count") val stargazersCount: Long,
-    @SerializedName("watchers_count") val watchersCount: Long,
+    @SerializedName("size") val size: Int,
+    @SerializedName("stargazers_count") val stargazersCount: Int,
+    @SerializedName("watchers_count") val watchersCount: Int,
     @SerializedName("language") val language: String?,
     @SerializedName("has_issues") val hasIssues: Boolean,
     @SerializedName("has_projects") val hasProjects: Boolean,
@@ -71,19 +71,16 @@ data class RepoWithScore(
     @SerializedName("mirror_url") val mirrorUrl: String?,
     @SerializedName("archived") val archived: Boolean,
     @SerializedName("disabled") val disabled: Boolean,
-    @SerializedName("open_issues_count") val openIssuesCount: Long,
+    @SerializedName("open_issues_count") val openIssuesCount: Int,
     @SerializedName("license") val license: License?,
     @SerializedName("allow_forking") val allowForking: Boolean,
     @SerializedName("is_template") val isTemplate: Boolean,
     @SerializedName("web_commit_signoff_required") val webCommitSignoffRequired: Boolean,
     @SerializedName("topics") val topics: List<String>,
     @SerializedName("visibility") val visibility: String,
-    @SerializedName("forks") val forks: Long,
-    @SerializedName("open_issues") val openIssues: Long,
-    @SerializedName("watchers") val watchers: Long,
+    @SerializedName("forks") val forks: Int,
+    @SerializedName("open_issues") val openIssues: Int,
+    @SerializedName("watchers") val watchers: Int,
     @SerializedName("default_branch") val defaultBranch: String,
-    @SerializedName("permissions") val permissions: Permissions,
-    @SerializedName("score") val score: Long,
+    @SerializedName("permissions") val permissions: Permissions
 )
-
-
