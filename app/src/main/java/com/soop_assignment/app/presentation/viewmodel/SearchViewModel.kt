@@ -1,6 +1,7 @@
 package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.soop_assignment.app.domain.entity.ApiResponse
 import com.soop_assignment.app.domain.useCase.SearchRepositoriesUseCase
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
@@ -39,8 +40,12 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
     private fun searchResult(text: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (text.isNotBlank()) {
-                val result = searchRepositoriesUseCase(text)
-                setState { copy(searchResult = result, searchInput = text) }
+                val searchResult = searchRepositoriesUseCase(text)
+                when (searchResult) {
+                    is ApiResponse.Error -> {}
+                    is ApiResponse.Exception -> {}
+                    is ApiResponse.Success -> setState { copy(searchResult = searchResult.data, searchInput = text) }
+                }
             }
         }
     }

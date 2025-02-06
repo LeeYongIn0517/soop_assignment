@@ -1,27 +1,24 @@
 package com.soop_assignment.app.data.repositoryImpl
 
 import com.soop_assignment.app.data.service.GitHubApiService
-import com.soop_assignment.app.domain.entity.OwnerAllData
-import com.soop_assignment.app.domain.entity.RepoMetaData
-import com.soop_assignment.app.domain.entity.RepoWithoutScore
-import com.soop_assignment.app.domain.entity.SearchResponse
+import com.soop_assignment.app.domain.entity.*
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
 class GitHubRepositoryImpl @Inject constructor(private val gitHubApiService: GitHubApiService) : GitHubRepository {
-    override suspend fun searchRepositories(query: String): SearchResponse? {
-        return gitHubApiService.searchRepositories(query).execute().body()
+    override suspend fun searchRepositories(query: String): ApiResponse<SearchResponse> {
+        return safeApiCall { gitHubApiService.searchRepositories(query) }
     }
 
-    override fun getRepository(owner: String, repo: String): RepoMetaData? {
-        return gitHubApiService.getRepository(owner, repo).execute().body()
+    override suspend fun getRepository(owner: String, repo: String): ApiResponse<RepoMetaData> {
+        return safeApiCall { gitHubApiService.getRepository(owner, repo) }
     }
 
-    override fun getUserRepositories(username: String): List<RepoWithoutScore>? {
-        return gitHubApiService.getUserRepositories(username).execute().body()
+    override suspend fun getUserRepositories(username: String): ApiResponse<List<RepoWithoutScore>> {
+        return safeApiCall { gitHubApiService.getUserRepositories(username) }
     }
 
-    override fun getUserInfo(username: String): OwnerAllData? {
-        return gitHubApiService.getUserInfo(username).execute().body()
+    override suspend fun getUserInfo(username: String): ApiResponse<OwnerAllData> {
+        return safeApiCall { gitHubApiService.getUserInfo(username) }
     }
 }

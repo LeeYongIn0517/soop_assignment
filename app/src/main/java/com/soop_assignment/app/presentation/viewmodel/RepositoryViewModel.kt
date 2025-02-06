@@ -1,6 +1,7 @@
 package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.soop_assignment.app.domain.entity.ApiResponse
 import com.soop_assignment.app.domain.useCase.GetRepositoryUseCase
 import com.soop_assignment.app.domain.useCase.GetUserInfoUseCase
 import com.soop_assignment.app.presentation.contract.RepositoryEffect
@@ -25,6 +26,7 @@ class RepositoryViewModel @Inject constructor(
         when (event) {
             is RepositoryEvent.GetRepository -> {
                 getRepository(userName = event.userName, repository = event.repository)
+                getUser(event.userName)
             }
 
             RepositoryEvent.ClickBackButton -> setEffect(RepositoryEffect.NavigateToBack)
@@ -34,9 +36,28 @@ class RepositoryViewModel @Inject constructor(
 
     private fun getRepository(userName: String, repository: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val repository = getRepositoryUseCase(userName = userName, repo = repository)
-            val user = getUserInfoUseCase(userName = userName)
-            setState { copy(isLoading = false, repository = repository, user = user) }
+            val repositoryResult = getRepositoryUseCase(userName = userName, repo = repository)
+            when (repositoryResult) {
+                is ApiResponse.Error -> {}
+                is ApiResponse.Exception -> {}
+                is ApiResponse.Success -> {
+                    setState { copy(isLoading = false, repository = repositoryResult.data) }
+                }
+            }
+
+        }
+    }
+
+    private fun getUser(userName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userResult = getUserInfoUseCase(userName = userName)
+            when (userResult) {
+                is ApiResponse.Error -> {}
+                is ApiResponse.Exception -> {}
+                is ApiResponse.Success -> {
+                    setState { copy(isLoading = false, user = userResult.data) }
+                }
+            }
         }
     }
 }
