@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class OwnerAllData(
     @SerializedName("login") val login: String,
-    @SerializedName("id") val id: Int,
+    @SerializedName("id") val id: Long,
     @SerializedName("node_id") val nodeId: String,
     @SerializedName("avatar_url") val avatarUrl: String,
     @SerializedName("gravatar_id") val gravatarId: String,
@@ -29,10 +29,10 @@ data class OwnerAllData(
     @SerializedName("hireable") val hireable: Boolean?,
     @SerializedName("bio") val bio: String?,
     @SerializedName("twitter_username") val twitterUsername: String?,
-    @SerializedName("public_repos") val publicRepos: Int,
-    @SerializedName("public_gists") val publicGists: Int,
-    @SerializedName("followers") val followers: Int,
-    @SerializedName("following") val following: Int,
+    @SerializedName("public_repos") val publicRepos: Long,
+    @SerializedName("public_gists") val publicGists: Long,
+    @SerializedName("followers") val followers: Long,
+    @SerializedName("following") val following: Long,
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String
 )
