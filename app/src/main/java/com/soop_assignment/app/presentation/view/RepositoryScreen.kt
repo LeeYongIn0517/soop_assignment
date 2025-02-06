@@ -21,6 +21,7 @@ import com.soop_assignment.app.domain.model.User
 import com.soop_assignment.app.presentation.contract.RepositoryEffect
 import com.soop_assignment.app.presentation.contract.RepositoryEvent
 import com.soop_assignment.app.presentation.viewmodel.RepositoryViewModel
+import com.soop_assignment.app.ui.component.ErrorItem
 import com.soop_assignment.app.ui.theme.Typography
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
@@ -63,14 +64,19 @@ fun RepositoryScreen(
                     )
                 })
             if (uiState.value.isLoading) {
+                //로딩 화면
                 Column(
-                    Modifier.fillMaxSize(),
+                    modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.3f))
                 }
+            } else if (uiState.value.isError) {
+                //에러 메세지 화면
+                ErrorItem(code = uiState.value.errorMessage?.code, message = uiState.value.errorMessage?.message)
             } else {
+                //정상적인 화면
                 if (showBottomSheet) {
                     ModalBottomSheet(
                         modifier = Modifier.padding(innerPadding),
@@ -173,6 +179,11 @@ fun RepositoryScreen(
             }
         }
     }
+}
+
+@Composable
+fun Content() {
+
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
