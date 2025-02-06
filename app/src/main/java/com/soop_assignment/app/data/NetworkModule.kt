@@ -1,8 +1,8 @@
 package com.soop_assignment.app.data
 
 import com.google.gson.GsonBuilder
-import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import com.soop_assignment.app.BuildConfig
+import com.soop_assignment.app.data.service.GitHubApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +23,6 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .client(okHttpClient)
-            .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
     }
@@ -34,7 +33,6 @@ object NetworkModule {
         val okHttpClientBuilder = OkHttpClient().newBuilder()
         okHttpClientBuilder.connectTimeout(60, TimeUnit.SECONDS)
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS)
-        okHttpClientBuilder.addInterceptor(headerInterceptor)
         return okHttpClientBuilder.build()
     }
 
@@ -51,5 +49,10 @@ object NetworkModule {
                 proceed(newRequest)
             }
         }
+    }
+
+    @Provides
+    fun provideGitHubService(retrofit: Retrofit): GitHubApiService {
+        return retrofit.create(GitHubApiService::class.java)
     }
 }
