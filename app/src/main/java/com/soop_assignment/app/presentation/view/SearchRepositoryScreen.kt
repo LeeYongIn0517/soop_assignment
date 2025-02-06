@@ -43,11 +43,9 @@ fun SearchRepositoryScreen(
         }
     }
 
-    Column(
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
+    ) { innerPadding ->
         SearchBar(
             query = searchBarText.value,
             onQueryChange = {
@@ -68,7 +66,7 @@ fun SearchRepositoryScreen(
                 )
             },
         ) {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.padding(innerPadding)) {
                 items(items = uiState.value.searchResult, key = { it.id }) {
                     Column(
                         Modifier.fillMaxWidth(1f).padding(16.dp).clickable {
