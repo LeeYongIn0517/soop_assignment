@@ -5,7 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,8 +35,7 @@ fun RepositoryScreen(
     viewModel: RepositoryViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val modalBottomSheet = rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
-    var showBottomSheet by remember { mutableStateOf(uiState.value.isModalExpanded) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(Unit) {
         viewModel.handleEvent(RepositoryEvent.GetRepository(userName = userName, repository = repository))
@@ -49,7 +49,7 @@ fun RepositoryScreen(
 
     Scaffold(modifier = Modifier.fillMaxSize(1f)) { innerPadding ->
         Column(
-            modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f),
+            modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f).padding(innerPadding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -72,11 +72,12 @@ fun RepositoryScreen(
                 ErrorItem(code = uiState.value.errorMessage?.code, message = uiState.value.errorMessage?.message)
             } else {
                 //정상적인 화면
-                if (showBottomSheet) {
+                if (uiState.value.isModalExpanded) {
                     ModalBottomSheet(
-                        modifier = Modifier.padding(innerPadding),
-                        onDismissRequest = { viewModel.handleEvent(RepositoryEvent.ClickUserMore) },
-                        sheetState = modalBottomSheet
+                        onDismissRequest = {
+                            viewModel.handleEvent(RepositoryEvent.ClickUserMore)
+                        },
+                        sheetState = sheetState
                     ) {
                         UserInfoBottomSheetContent(uiState.value.user)
                     }
@@ -135,6 +136,7 @@ fun RepositoryScreen(
                     Spacer(Modifier.fillMaxWidth().background(color = Color.LightGray).height(1.dp))
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth(1f).padding(vertical = 20.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -147,7 +149,9 @@ fun RepositoryScreen(
                             Text(text = uiState.value.user?.userName ?: "", style = Typography.bodyLarge)
                         }
                         Button(
-                            onClick = { viewModel.handleEvent(RepositoryEvent.ClickUserMore) },
+                            onClick = {
+                                viewModel.handleEvent(RepositoryEvent.ClickUserMore)
+                            },
                             content = {
                                 Text(
                                     text = "more",
@@ -176,10 +180,6 @@ fun RepositoryScreen(
     }
 }
 
-@Composable
-fun Content() {
-
-}
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -209,6 +209,10 @@ fun UserInfoBottomSheetContent(user: User?) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 36.dp)) {
             Text(text = "Language", style = Typography.titleMedium, modifier = Modifier.padding(end = 16.dp))
             Text(text = "${user?.languages}", style = Typography.bodyMedium, color = Color.DarkGray)
+        }
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 36.dp)) {
+            Text(text = "Repositories", style = Typography.titleMedium, modifier = Modifier.padding(end = 16.dp))
+            Text(text = "${user?.repositories}", style = Typography.bodyMedium, color = Color.DarkGray)
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 36.dp)) {
             Text(text = "Bio", style = Typography.titleMedium, modifier = Modifier.padding(end = 16.dp))
