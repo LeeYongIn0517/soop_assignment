@@ -26,7 +26,10 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
                 )
             )
 
-            is SearchRepositoryEvent.ClickSearchButton -> searchResult(event.text)
+            is SearchRepositoryEvent.ClickSearchButton -> {
+                searchResult(event.text)
+            }
+
             is SearchRepositoryEvent.ChangeSearchWord -> {
                 searchResult(event.text)
             }
@@ -37,7 +40,7 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
         viewModelScope.launch(Dispatchers.IO) {
             if (text.isNotBlank()) {
                 val result = searchRepositoriesUseCase(text)
-                setState { copy(searchResult = result) }
+                setState { copy(searchResult = result, searchInput = text) }
             }
         }
     }

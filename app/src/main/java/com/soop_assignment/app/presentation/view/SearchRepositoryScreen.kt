@@ -1,6 +1,7 @@
 package com.soop_assignment.app.presentation.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,7 +33,7 @@ fun SearchRepositoryScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val searchBarText = remember { mutableStateOf("") }
+    val searchBarText = remember { mutableStateOf(uiState.value.searchInput) }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -69,7 +70,15 @@ fun SearchRepositoryScreen(
         ) {
             LazyColumn {
                 items(items = uiState.value.searchResult, key = { it.id }) {
-                    Column(Modifier.fillMaxWidth(1f).padding(16.dp)) {
+                    Column(
+                        Modifier.fillMaxWidth(1f).padding(16.dp).clickable {
+                            viewModel.handleEvent(
+                                SearchRepositoryEvent.ClickRepositoryItem(
+                                    user = it.userName,
+                                    repository = it.repositoryName
+                                )
+                            )
+                        }) {
                         Text(
                             text = it.repositoryName,
                             style = Typography.bodySmall,
