@@ -21,6 +21,7 @@ import com.soop_assignment.app.domain.model.User
 import com.soop_assignment.app.presentation.contract.RepositoryEffect
 import com.soop_assignment.app.presentation.contract.RepositoryEvent
 import com.soop_assignment.app.presentation.viewmodel.RepositoryViewModel
+import com.soop_assignment.app.ui.component.CircularProgressItem
 import com.soop_assignment.app.ui.component.ErrorItem
 import com.soop_assignment.app.ui.theme.Typography
 
@@ -65,13 +66,7 @@ fun RepositoryScreen(
                 })
             if (uiState.value.isLoading) {
                 //로딩 화면
-                Column(
-                    modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.3f))
-                }
+                CircularProgressItem()
             } else if (uiState.value.isError) {
                 //에러 메세지 화면
                 ErrorItem(code = uiState.value.errorMessage?.code, message = uiState.value.errorMessage?.message)
