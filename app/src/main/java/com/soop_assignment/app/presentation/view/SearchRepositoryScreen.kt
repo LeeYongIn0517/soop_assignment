@@ -8,10 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +27,8 @@ import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
 import com.soop_assignment.app.presentation.viewmodel.SearchViewModel
 import com.soop_assignment.app.ui.component.ErrorItem
 import com.soop_assignment.app.ui.theme.Typography
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
@@ -38,8 +37,14 @@ fun SearchRepositoryScreen(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val searchBarText = remember { mutableStateOf(uiState.value.searchInput) }
+    val searchWord = remember { mutableStateOf(uiState.value.searchInput) }
     val searchResult = viewModel.getSearchPagingResult(uiState.value.searchInput)?.collectAsLazyPagingItems()
+    val textFlow = remember { snapshotFlow { searchWord.value } }
+
+    LaunchedEffect(textFlow) {
+        textFlow.debounce(700).filter { it.isNotBlank() }
+            .collect { viewModel.handleEvent(SearchRepositoryEvent.ChangeSearchWord(it)) }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -53,10 +58,9 @@ fun SearchRepositoryScreen(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         SearchBar(
-            query = searchBarText.value,
+            query = searchWord.value,
             onQueryChange = {
-                searchBarText.value = it
-                viewModel.handleEvent(SearchRepositoryEvent.ChangeSearchWord(it))
+                searchWord.value = it
             },
             shadowElevation = 5.dp,
             onSearch = { viewModel.handleEvent(SearchRepositoryEvent.ChangeSearchWord(it)) },
