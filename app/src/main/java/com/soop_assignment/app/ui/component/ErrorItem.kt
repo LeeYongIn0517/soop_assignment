@@ -15,13 +15,20 @@ import com.soop_assignment.app.ui.theme.Typography
 
 @Composable
 fun ErrorItem(code: Int?, message: String?) {
+    val errorCode = code ?: "400"
+    val errorMessage = message ?: "예기치 않은 오류가 발생했습니다."
     Column(
         modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("${code}", style = Typography.titleLarge, color = Color.Gray, modifier = Modifier.padding(bottom = 20.dp))
-        Text("${message ?: "예기치 못한 오류가 발생했습니다:("}", style = Typography.bodyLarge, color = Color.Gray)
+        Text(
+            "${errorCode}",
+            style = Typography.titleLarge,
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 20.dp)
+        )
+        Text(errorMessage, style = Typography.bodyLarge, color = Color.Gray)
     }
 }
 
