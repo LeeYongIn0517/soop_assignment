@@ -3,6 +3,7 @@ package com.soop_assignment.app.presentation.view
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.soop_assignment.app.domain.entity.ApiResponse
+import com.soop_assignment.app.domain.extractNextKey
 import com.soop_assignment.app.domain.model.BriefRepo
 import com.soop_assignment.app.domain.model.ErrorMessage
 import com.soop_assignment.app.domain.useCase.SearchRepositoriesUseCase
@@ -60,18 +61,5 @@ class SearchPagingSource(
         val prevKey = if (page > 1) page - 1 else null
         val nextKey = extractNextKey(linkHeader)
         return Pair(prevKey, nextKey)
-    }
-
-    private fun extractNextKey(linkHeader: String): Int? {
-        val nextUrl = linkHeader
-            .split(",")
-            .find { it.contains("rel=\"next\"") }
-            ?.substringAfter("<")
-            ?.substringBefore(">")
-
-        val nextKey = nextUrl?.let { url ->
-            Regex("page=(\\d+)").find(url)?.groupValues?.get(1)?.toInt()
-        }
-        return nextKey
     }
 }

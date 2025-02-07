@@ -72,8 +72,8 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
                     false,
                     true,
                     ErrorMessage(
-                        apiResponse.code ?: UNKNOWN_ERROR_CODE,
-                        apiResponse.message ?: UNKNOWN_ERROR_MESSAGE,
+                        apiResponse.code,
+                        apiResponse.message
                     ),
                     null
                 )
