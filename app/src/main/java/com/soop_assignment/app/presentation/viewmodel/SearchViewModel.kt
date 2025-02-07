@@ -43,7 +43,8 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
         }
     }
 
-    fun searchResult(query: String) = SearchPagingSource(searchRepositoriesUseCase, query)
+    fun searchResult(query: String) =
+        SearchPagingSource(searchRepositoriesUseCase, query, onErrorOcurred = { setState { copy(errorMessage = it) } })
 
     fun getSearchPagingResult(query: String): Flow<PagingData<BriefRepo>>? {
         return if (query.isNotBlank()) {

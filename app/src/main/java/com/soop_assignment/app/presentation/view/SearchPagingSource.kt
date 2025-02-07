@@ -4,9 +4,14 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.soop_assignment.app.domain.entity.ApiResponse
 import com.soop_assignment.app.domain.model.BriefRepo
+import com.soop_assignment.app.domain.model.ErrorMessage
 import com.soop_assignment.app.domain.useCase.SearchRepositoriesUseCase
 
-class SearchPagingSource(val searchRepositoryUseCase: SearchRepositoriesUseCase, val query: String) :
+class SearchPagingSource(
+    val searchRepositoryUseCase: SearchRepositoriesUseCase,
+    val query: String,
+    val onErrorOcurred: (error: ErrorMessage) -> Unit
+) :
     PagingSource<Int, BriefRepo>() {
 
     override fun getRefreshKey(state: PagingState<Int, BriefRepo>): Int? {
@@ -35,7 +40,11 @@ class SearchPagingSource(val searchRepositoryUseCase: SearchRepositoriesUseCase,
     private fun handleApiResponse(response: ApiResponse<List<BriefRepo>>): List<BriefRepo> {
         return when (response) {
             is ApiResponse.Success -> response.data
-            is ApiResponse.Error -> throw Exception(response.message)
+            is ApiResponse.Error -> {
+                onErrorOcurred(ErrorMessage(response.code, response.message))
+                throw Exception(response.message)
+            }
+
             is ApiResponse.Exception -> throw Exception(response.exception.message)
         }
     }
