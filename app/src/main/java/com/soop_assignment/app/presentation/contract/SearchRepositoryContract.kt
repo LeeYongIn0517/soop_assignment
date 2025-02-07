@@ -1,6 +1,5 @@
 package com.soop_assignment.app.presentation.contract
 
-import com.soop_assignment.app.domain.model.BriefRepo
 import com.soop_assignment.app.domain.model.ErrorMessage
 
 sealed interface SearchRepositoryEvent : UiEvent {
@@ -14,7 +13,6 @@ data class SearchRepositoryState(
     val isError: Boolean = false,
     val errorMessage: ErrorMessage? = null,
     val searchInput: String = "",
-    val searchResult: List<BriefRepo>? = emptyList()
 ) : UiState
 
 sealed interface SearchRepositoryEffect : UiEffect {

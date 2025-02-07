@@ -7,8 +7,8 @@ import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
 class SearchRepositoriesUseCase @Inject constructor(private val gitHubRepository: GitHubRepository) {
-    suspend operator fun invoke(query: String): ApiResponse<List<BriefRepo>> {
-        val response = gitHubRepository.searchRepositories(query)
+    suspend operator fun invoke(query: String, page: Int): ApiResponse<List<BriefRepo>> {
+        val response = gitHubRepository.searchRepositories(query = query, page = page)
         return when (response) {
             is ApiResponse.Error -> {
                 ApiResponse.Error(response.code, response.message)

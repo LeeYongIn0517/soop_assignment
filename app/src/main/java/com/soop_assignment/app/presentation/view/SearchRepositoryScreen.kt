@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -21,16 +20,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.soop_assignment.app.R
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
 import com.soop_assignment.app.presentation.viewmodel.SearchViewModel
-import com.soop_assignment.app.ui.component.CircularProgressItem
 import com.soop_assignment.app.ui.component.ErrorItem
 import com.soop_assignment.app.ui.theme.Typography
-
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
@@ -40,6 +39,7 @@ fun SearchRepositoryScreen(
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val searchBarText = remember { mutableStateOf(uiState.value.searchInput) }
+    val searchResult = viewModel.getSearchPagingResult(uiState.value.searchInput).collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -72,51 +72,68 @@ fun SearchRepositoryScreen(
                 )
             },
         ) {
-            if (uiState.value.isLoading) {
-                //로딩 화면
-                CircularProgressItem()
-            } else if (uiState.value.isError) {
-                //에러 메세지 화면
-                ErrorItem(code = uiState.value.errorMessage?.code, message = uiState.value.errorMessage?.message)
-            } else { //정상 화면
-                LazyColumn(modifier = Modifier.padding(innerPadding)) {
-                    items(items = uiState.value.searchResult ?: emptyList(), key = { it.id }) {
+            when (searchResult.loadState.refresh) {
+                is LoadState.Error -> {
+                    ErrorItem(
+                        code = uiState.value.errorMessage?.code,
+                        message = uiState.value.errorMessage?.message
+                    )
+                }
+
+                else -> {}
+            }
+            when (searchResult.loadState.append) {
+                is LoadState.Error -> {
+                    ErrorItem(
+                        code = uiState.value.errorMessage?.code,
+                        message = uiState.value.errorMessage?.message
+                    )
+                }
+
+                else -> {}
+            }
+            LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                items(
+                    searchResult.itemCount,
+                    key = { index -> "${searchResult[index]?.userName}/${searchResult[index]?.repositoryName}" }) { index ->
+                    val item = searchResult[index]
+                    if (item != null) {
                         Column(
                             Modifier.fillMaxWidth(1f).padding(16.dp).clickable {
                                 viewModel.handleEvent(
                                     SearchRepositoryEvent.ClickRepositoryItem(
-                                        user = it.userName,
-                                        repository = it.repositoryName
+                                        user = item.userName,
+                                        repository = item.repositoryName
                                     )
                                 )
                             }) {
                             Row {
                                 GlideImage(
-                                    model = it.userImageUrl,
+                                    model = item.userImageUrl,
                                     contentDescription = null,
                                     modifier = Modifier.background(color = Color.Transparent, shape = CircleShape)
                                         .fillMaxWidth(0.1f).padding(end = 16.dp).clip(CircleShape)
                                 )
                                 Text(
-                                    text = it.userName,
+                                    text = item.userName,
                                     style = Typography.bodySmall,
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
                             }
                             Text(
-                                text = it.repositoryName,
+                                text = item.repositoryName,
                                 style = Typography.titleMedium,
                                 modifier = Modifier.padding(bottom = 16.dp)
                             )
                             Text(
-                                text = it.description,
+                                text = item.description,
                                 style = Typography.bodyMedium,
                                 modifier = Modifier.padding(bottom = 16.dp)
                             )
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 SuggestionChip(
                                     onClick = {},
-                                    label = { Text(text = "${it.stars}", style = Typography.bodySmall) },
+                                    label = { Text(text = "${item.stars}", style = Typography.bodySmall) },
                                     icon = {
                                         Icon(
                                             painter = painterResource(R.drawable.ic_star),
@@ -125,10 +142,11 @@ fun SearchRepositoryScreen(
                                         )
                                     }, modifier = Modifier.padding(end = 12.dp)
                                 )
-                                Text(text = it.language, style = Typography.bodySmall)
+                                Text(text = item.language, style = Typography.bodySmall)
                             }
                             Spacer(
-                                modifier = Modifier.fillMaxWidth(1f).background(color = Color.LightGray).height(1.dp)
+                                modifier = Modifier.fillMaxWidth(1f).background(color = Color.LightGray)
+                                    .height(1.dp)
                             )
                         }
                     }

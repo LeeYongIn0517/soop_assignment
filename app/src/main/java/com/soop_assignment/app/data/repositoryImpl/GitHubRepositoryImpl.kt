@@ -6,8 +6,8 @@ import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
 class GitHubRepositoryImpl @Inject constructor(private val gitHubApiService: GitHubApiService) : GitHubRepository {
-    override suspend fun searchRepositories(query: String): ApiResponse<SearchResponse> {
-        return safeApiCall { gitHubApiService.searchRepositories(query) }
+    override suspend fun searchRepositories(query: String, page: Int): ApiResponse<SearchResponse> {
+        return safeApiCall { gitHubApiService.searchRepositories(query = query, page = page) }
     }
 
     override suspend fun getRepository(owner: String, repo: String): ApiResponse<RepoMetaData> {

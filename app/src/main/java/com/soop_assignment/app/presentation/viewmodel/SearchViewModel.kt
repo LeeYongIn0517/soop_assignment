@@ -1,18 +1,25 @@
 package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.soop_assignment.app.domain.model.BriefRepo
 import com.soop_assignment.app.domain.useCase.SearchRepositoriesUseCase
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
 import com.soop_assignment.app.presentation.contract.SearchRepositoryState
+import com.soop_assignment.app.presentation.view.SearchPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase: SearchRepositoriesUseCase) :
     BaseViewModel<SearchRepositoryEvent, SearchRepositoryState, SearchRepositoryEffect>() {
+    val PAGE_SIZE = 30
+
     override fun createInitialState(): SearchRepositoryState {
         return SearchRepositoryState()
     }
@@ -31,33 +38,15 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
             }
 
             is SearchRepositoryEvent.ChangeSearchWord -> {
-                setState { copy(isLoading = true) }
-                searchResult(event.text)
+                setState { copy(searchInput = event.text) }
             }
         }
     }
 
-    private fun searchResult(text: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (text.isNotBlank()) {
-                val searchResult = searchRepositoriesUseCase(text)
-                handleError(apiResponse = searchResult) { isLoading, isError, errorMessage, data ->
-                    when {
-                        isError -> this.copy(isLoading, isError, errorMessage, searchResult = data, searchInput = text)
-                        data != null -> this.copy(
-                            isLoading,
-                            isError,
-                            errorMessage,
-                            searchResult = data,
-                            searchInput = text
-                        )
+    fun searchResult(query: String) = SearchPagingSource(searchRepositoriesUseCase, query)
 
-                        else -> this
-                    }
-                }
-            } else {
-                setState { copy(isLoading = false) }
-            }
-        }
-    }
+    fun getSearchPagingResult(query: String): Flow<PagingData<BriefRepo>> = Pager(
+        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false, prefetchDistance = 1),
+        pagingSourceFactory = { searchResult(query) }
+    ).flow.cachedIn(viewModelScope)
 }
