@@ -45,8 +45,14 @@ class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase:
 
     fun searchResult(query: String) = SearchPagingSource(searchRepositoriesUseCase, query)
 
-    fun getSearchPagingResult(query: String): Flow<PagingData<BriefRepo>> = Pager(
-        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false, prefetchDistance = 1),
-        pagingSourceFactory = { searchResult(query) }
-    ).flow.cachedIn(viewModelScope)
+    fun getSearchPagingResult(query: String): Flow<PagingData<BriefRepo>>? {
+        return if (query.isNotBlank()) {
+            Pager(
+                config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false, prefetchDistance = 1),
+                pagingSourceFactory = { searchResult(query) }
+            ).flow.cachedIn(viewModelScope)
+        } else {
+            null
+        }
+    }
 }

@@ -39,7 +39,7 @@ fun SearchRepositoryScreen(
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val searchBarText = remember { mutableStateOf(uiState.value.searchInput) }
-    val searchResult = viewModel.getSearchPagingResult(uiState.value.searchInput).collectAsLazyPagingItems()
+    val searchResult = viewModel.getSearchPagingResult(uiState.value.searchInput)?.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -72,7 +72,7 @@ fun SearchRepositoryScreen(
                 )
             },
         ) {
-            when (searchResult.loadState.refresh) {
+            when (searchResult?.loadState?.refresh) {
                 is LoadState.Error -> {
                     ErrorItem(
                         code = uiState.value.errorMessage?.code,
@@ -82,7 +82,7 @@ fun SearchRepositoryScreen(
 
                 else -> {}
             }
-            when (searchResult.loadState.append) {
+            when (searchResult?.loadState?.append) {
                 is LoadState.Error -> {
                     ErrorItem(
                         code = uiState.value.errorMessage?.code,
@@ -92,62 +92,64 @@ fun SearchRepositoryScreen(
 
                 else -> {}
             }
-            LazyColumn(modifier = Modifier.padding(innerPadding)) {
-                items(
-                    searchResult.itemCount,
-                    key = { index -> "${searchResult[index]?.userName}/${searchResult[index]?.repositoryName}" }) { index ->
-                    val item = searchResult[index]
-                    if (item != null) {
-                        Column(
-                            Modifier.fillMaxWidth(1f).padding(16.dp).clickable {
-                                viewModel.handleEvent(
-                                    SearchRepositoryEvent.ClickRepositoryItem(
-                                        user = item.userName,
-                                        repository = item.repositoryName
+            if (searchResult != null) {
+                LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                    items(
+                        searchResult.itemCount,
+                        key = { index -> "${searchResult[index]?.userName}/${searchResult[index]?.repositoryName}" }) { index ->
+                        val item = searchResult[index]
+                        if (item != null) {
+                            Column(
+                                Modifier.fillMaxWidth(1f).padding(16.dp).clickable {
+                                    viewModel.handleEvent(
+                                        SearchRepositoryEvent.ClickRepositoryItem(
+                                            user = item.userName,
+                                            repository = item.repositoryName
+                                        )
                                     )
-                                )
-                            }) {
-                            Row {
-                                GlideImage(
-                                    model = item.userImageUrl,
-                                    contentDescription = null,
-                                    modifier = Modifier.background(color = Color.Transparent, shape = CircleShape)
-                                        .fillMaxWidth(0.1f).padding(end = 16.dp).clip(CircleShape)
-                                )
+                                }) {
+                                Row {
+                                    GlideImage(
+                                        model = item.userImageUrl,
+                                        contentDescription = null,
+                                        modifier = Modifier.background(color = Color.Transparent, shape = CircleShape)
+                                            .fillMaxWidth(0.1f).padding(end = 16.dp).clip(CircleShape)
+                                    )
+                                    Text(
+                                        text = item.userName,
+                                        style = Typography.bodySmall,
+                                        modifier = Modifier.padding(bottom = 16.dp)
+                                    )
+                                }
                                 Text(
-                                    text = item.userName,
-                                    style = Typography.bodySmall,
+                                    text = item.repositoryName,
+                                    style = Typography.titleMedium,
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
-                            }
-                            Text(
-                                text = item.repositoryName,
-                                style = Typography.titleMedium,
-                                modifier = Modifier.padding(bottom = 16.dp)
-                            )
-                            Text(
-                                text = item.description,
-                                style = Typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 16.dp)
-                            )
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                SuggestionChip(
-                                    onClick = {},
-                                    label = { Text(text = "${item.stars}", style = Typography.bodySmall) },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_star),
-                                            tint = Color.Yellow,
-                                            contentDescription = null
-                                        )
-                                    }, modifier = Modifier.padding(end = 12.dp)
+                                Text(
+                                    text = item.description,
+                                    style = Typography.bodyMedium,
+                                    modifier = Modifier.padding(bottom = 16.dp)
                                 )
-                                Text(text = item.language, style = Typography.bodySmall)
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    SuggestionChip(
+                                        onClick = {},
+                                        label = { Text(text = "${item.stars}", style = Typography.bodySmall) },
+                                        icon = {
+                                            Icon(
+                                                painter = painterResource(R.drawable.ic_star),
+                                                tint = Color.Yellow,
+                                                contentDescription = null
+                                            )
+                                        }, modifier = Modifier.padding(end = 12.dp)
+                                    )
+                                    Text(text = item.language, style = Typography.bodySmall)
+                                }
+                                Spacer(
+                                    modifier = Modifier.fillMaxWidth(1f).background(color = Color.LightGray)
+                                        .height(1.dp)
+                                )
                             }
-                            Spacer(
-                                modifier = Modifier.fillMaxWidth(1f).background(color = Color.LightGray)
-                                    .height(1.dp)
-                            )
                         }
                     }
                 }
