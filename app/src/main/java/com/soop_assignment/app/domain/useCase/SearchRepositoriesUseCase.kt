@@ -6,18 +6,12 @@ import com.soop_assignment.app.domain.model.BriefRepo
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
-class SearchRepositoriesUseCase @Inject constructor(private val gitHubRepository: GitHubRepository) {
+class SearchRepositoriesUseCase @Inject constructor(private val gitHubRepository: GitHubRepository) : BaseUseCase() {
     suspend operator fun invoke(query: String, page: Int): ApiResponse<List<BriefRepo>> {
         val response = gitHubRepository.searchRepositories(query = query, page = page)
-        return when (response) {
-            is ApiResponse.Error -> {
-                ApiResponse.Error(response.code, response.message)
-            }
 
-            is ApiResponse.Exception -> ApiResponse.Exception(response.exception)
-            is ApiResponse.Success -> {
-                ApiResponse.Success(response.data.items?.toBriefRepoList() ?: emptyList())
-            }
+        return response.mapResponse { data ->
+            data.items?.toBriefRepoList() ?: emptyList()
         }
     }
 

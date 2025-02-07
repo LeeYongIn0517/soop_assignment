@@ -5,21 +5,17 @@ import com.soop_assignment.app.domain.model.SpecificRepo
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
-class GetRepositoryUseCase @Inject constructor(private val gitHubRepository: GitHubRepository) {
+class GetRepositoryUseCase @Inject constructor(private val gitHubRepository: GitHubRepository) : BaseUseCase() {
     suspend operator fun invoke(userName: String, repo: String): ApiResponse<SpecificRepo> {
         val response = gitHubRepository.getRepository(userName, repo)
-        return when (response) {
-            is ApiResponse.Error -> ApiResponse.Error(response.code, response.message)
-            is ApiResponse.Exception -> ApiResponse.Exception(response.exception)
-            is ApiResponse.Success -> ApiResponse.Success<SpecificRepo>(
-                data = SpecificRepo(
-                    userImageUrl = response.data.owner.avatarUrl,
-                    repositoryName = response.data.name,
-                    stars = response.data.stargazersCount,
-                    watchers = response.data.watchersCount,
-                    forks = response.data.forksCount,
-                    description = response.data.description ?: ""
-                )
+        return response.mapResponse { repoMetaData ->
+            SpecificRepo(
+                userImageUrl = repoMetaData.owner.avatarUrl,
+                repositoryName = repoMetaData.name,
+                stars = repoMetaData.stargazersCount,
+                watchers = repoMetaData.watchersCount,
+                forks = repoMetaData.forksCount,
+                description = repoMetaData.description ?: ""
             )
         }
     }
