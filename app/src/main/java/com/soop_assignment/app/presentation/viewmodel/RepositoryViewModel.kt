@@ -1,6 +1,7 @@
 package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.soop_assignment.app.domain.useCase.GetRepositoryAndLanguageUseCase
 import com.soop_assignment.app.domain.useCase.GetRepositoryUseCase
 import com.soop_assignment.app.domain.useCase.GetUserInfoUseCase
 import com.soop_assignment.app.presentation.contract.RepositoryEffect
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RepositoryViewModel @Inject constructor(
     private val getRepositoryUseCase: GetRepositoryUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getRepositoryAndLanguageUseCase: GetRepositoryAndLanguageUseCase
 ) : BaseViewModel<RepositoryEvent, RepositoryState, RepositoryEffect>() {
 
     override fun createInitialState(): RepositoryState {
@@ -24,8 +26,11 @@ class RepositoryViewModel @Inject constructor(
     override fun handleEvent(event: RepositoryEvent) {
         when (event) {
             is RepositoryEvent.GetRepository -> {
-                getRepository(userName = event.userName, repository = event.repository)
-                getUser(event.userName)
+                viewModelScope.launch(Dispatchers.IO) {
+                    getRepository(userName = event.userName, repository = event.repository)
+                    getUser(event.userName)
+                    getRepositoryCountsAndLanguage(event.userName)
+                }
             }
 
             RepositoryEvent.ClickBackButton -> setEffect(RepositoryEffect.NavigateToBack)
@@ -33,30 +38,39 @@ class RepositoryViewModel @Inject constructor(
         }
     }
 
-    private fun getRepository(userName: String, repository: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val repositoryResult = getRepositoryUseCase(userName = userName, repo = repository)
+    private suspend fun getRepository(userName: String, repository: String) {
+        val repositoryResult = getRepositoryUseCase(userName = userName, repo = repository)
 
-            handleError(apiResponse = repositoryResult) { isLoading, isError, errorMessage, data ->
-                when {
-                    isError -> this.copy(isLoading, isError, errorMessage, repository = data)
-                    data != null -> this.copy(isLoading, isError, errorMessage, repository = data)
-                    else -> this
-                }
+        handleError(apiResponse = repositoryResult) { isLoading, isError, errorMessage, data ->
+            //상태업데이트
+            when {
+                isError -> this.copy(isLoading, isError, errorMessage, repository = data)
+                data != null -> this.copy(isLoading, isError, errorMessage, repository = data)
+                else -> this
             }
-
         }
     }
 
-    private fun getUser(userName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val userResult = getUserInfoUseCase(userName = userName)
-            handleError(apiResponse = userResult) { isLoading, isError, errorMessage, data ->
-                when {
-                    isError -> this.copy(isLoading, isError, errorMessage, user = data)
-                    data != null -> this.copy(isLoading, isError, errorMessage, user = data)
-                    else -> this
-                }
+    private suspend fun getUser(userName: String) {
+        val userResult = getUserInfoUseCase(userName = userName)
+        handleError(apiResponse = userResult) { isLoading, isError, errorMessage, data ->
+            //상태업데이트
+            when {
+                isError -> this.copy(isLoading, isError, errorMessage, user = data) //에러
+                data != null -> this.copy(isLoading, isError, errorMessage, user = data) //성공
+                else -> this
+            }
+        }
+    }
+
+    private suspend fun getRepositoryCountsAndLanguage(userName: String) {
+        val result = getRepositoryAndLanguageUseCase(userName)
+        handleError(apiResponse = result) { isLoading, isError, errorMessage, data ->
+            //상태업데이트
+            when {
+                isError -> this.copy(isLoading, isError, errorMessage, repositoryAndLanguage = data)
+                data != null -> this.copy(isLoading, isError, errorMessage, repositoryAndLanguage = data)
+                else -> this
             }
         }
     }

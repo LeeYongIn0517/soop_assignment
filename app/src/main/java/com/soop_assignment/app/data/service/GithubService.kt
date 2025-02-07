@@ -24,7 +24,8 @@ interface GitHubApiService {
 
     @GET("users/{username}/repos")
     suspend fun getUserRepositories(
-        @Path("username") username: String
+        @Path("username") username: String,
+        @Query("page") page: Int
     ): Response<List<RepoWithoutScore>>
 
     @GET("users/{username}")

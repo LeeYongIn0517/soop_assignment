@@ -79,7 +79,11 @@ fun RepositoryScreen(
                         },
                         sheetState = sheetState
                     ) {
-                        UserInfoBottomSheetContent(uiState.value.user)
+                        UserInfoBottomSheetContent(
+                            uiState.value.user,
+                            repositoryCount = uiState.value.repositoryAndLanguage?.repositoryCounts ?: 0,
+                            language = uiState.value.repositoryAndLanguage?.languages ?: ""
+                        )
                     }
                 }
                 Column {
@@ -183,7 +187,7 @@ fun RepositoryScreen(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun UserInfoBottomSheetContent(user: User?) {
+fun UserInfoBottomSheetContent(user: User?, repositoryCount: Long, language: String) {
     Column(
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -208,11 +212,11 @@ fun UserInfoBottomSheetContent(user: User?) {
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 36.dp)) {
             Text(text = "Language", style = Typography.titleMedium, modifier = Modifier.padding(end = 16.dp))
-            Text(text = "${user?.languages}", style = Typography.bodyMedium, color = Color.DarkGray)
+            Text(text = "${language}", style = Typography.bodyMedium, color = Color.DarkGray)
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 36.dp)) {
             Text(text = "Repositories", style = Typography.titleMedium, modifier = Modifier.padding(end = 16.dp))
-            Text(text = "${user?.repositories}", style = Typography.bodyMedium, color = Color.DarkGray)
+            Text(text = "${repositoryCount}", style = Typography.bodyMedium, color = Color.DarkGray)
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 36.dp)) {
             Text(text = "Bio", style = Typography.titleMedium, modifier = Modifier.padding(end = 16.dp))

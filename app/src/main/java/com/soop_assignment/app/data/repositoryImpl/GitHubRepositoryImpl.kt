@@ -14,8 +14,8 @@ class GitHubRepositoryImpl @Inject constructor(private val gitHubApiService: Git
         return safeApiCall { gitHubApiService.getRepository(owner, repo) }
     }
 
-    override suspend fun getUserRepositories(username: String): ApiResponse<List<RepoWithoutScore>> {
-        return safeApiCall { gitHubApiService.getUserRepositories(username) }
+    override suspend fun getUserRepositories(username: String, page: Int): ApiResponse<List<RepoWithoutScore>> {
+        return safeApiCall { gitHubApiService.getUserRepositories(username, page) }
     }
 
     override suspend fun getUserInfo(username: String): ApiResponse<OwnerAllData> {

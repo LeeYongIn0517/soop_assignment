@@ -1,6 +1,7 @@
 package com.soop_assignment.app.presentation.contract
 
 import com.soop_assignment.app.domain.model.ErrorMessage
+import com.soop_assignment.app.domain.model.RepositoryCountsAndLanguage
 import com.soop_assignment.app.domain.model.SpecificRepo
 import com.soop_assignment.app.domain.model.User
 
@@ -16,6 +17,7 @@ data class RepositoryState(
     val errorMessage: ErrorMessage? = null,
     val repository: SpecificRepo? = null,
     val user: User? = null,
+    val repositoryAndLanguage: RepositoryCountsAndLanguage? = null,
     val isModalExpanded: Boolean = false
 ) : UiState
 
