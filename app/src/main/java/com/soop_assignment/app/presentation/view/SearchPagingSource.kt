@@ -24,8 +24,8 @@ class SearchPagingSource(
 
         try {
             val response = searchRepositoryUseCase(query = query, page = page)
-            val data = handleApiResponse(response)
-            val (prevKey, nextKey) = calculatePageKeys(page, data)
+            val (data, linkHeader) = handleApiResponse(response)
+            val (prevKey, nextKey) = calculatePageKeys(page, linkHeader)
 
             return LoadResult.Page(
                 data = data,
@@ -37,9 +37,16 @@ class SearchPagingSource(
         }
     }
 
-    private fun handleApiResponse(response: ApiResponse<List<BriefRepo>>): List<BriefRepo> {
+    private fun handleApiResponse(response: ApiResponse<List<BriefRepo>>): Pair<List<BriefRepo>, String> {
         return when (response) {
-            is ApiResponse.Success -> response.data
+            is ApiResponse.Success -> {
+                if (response.linkHeader != null) {
+                    Pair(response.data, response.linkHeader)
+                } else {
+                    throw Exception("API 오류 발생")
+                }
+            }
+
             is ApiResponse.Error -> {
                 onErrorOcurred(ErrorMessage(response.code, response.message))
                 throw Exception(response.message)
@@ -49,9 +56,22 @@ class SearchPagingSource(
         }
     }
 
-    private fun calculatePageKeys(page: Int, data: List<BriefRepo>): Pair<Int?, Int?> {
+    private fun calculatePageKeys(page: Int, linkHeader: String): Pair<Int?, Int?> {
         val prevKey = if (page > 1) page - 1 else null
-        val nextKey = if (page == 100 || data.isEmpty()) null else page + 1 //api 문서 상 page최대값은 100
+        val nextKey = extractNextKey(linkHeader)
         return Pair(prevKey, nextKey)
+    }
+
+    private fun extractNextKey(linkHeader: String): Int? {
+        val nextUrl = linkHeader
+            .split(",")
+            .find { it.contains("rel=\"next\"") }
+            ?.substringAfter("<")
+            ?.substringBefore(">")
+
+        val nextKey = nextUrl?.let { url ->
+            Regex("page=(\\d+)").find(url)?.groupValues?.get(1)?.toInt()
+        }
+        return nextKey
     }
 }

@@ -9,7 +9,7 @@ open class BaseUseCase {
         return when (this) {
             is ApiResponse.Error -> ApiResponse.Error(this.code, this.message)
             is ApiResponse.Exception -> ApiResponse.Exception(this.exception)
-            is ApiResponse.Success -> ApiResponse.Success(transform(this.data))
+            is ApiResponse.Success -> ApiResponse.Success(transform(this.data), this.linkHeader)
         }
     }
 }

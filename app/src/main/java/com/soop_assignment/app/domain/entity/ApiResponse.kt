@@ -6,19 +6,19 @@ import retrofit2.Response
 import java.io.IOException
 
 sealed class ApiResponse<out T> {
-    data class Success<T>(val data: T) : ApiResponse<T>()
+    data class Success<T>(val data: T, val linkHeader: String?) : ApiResponse<T>()
     data class Error(val code: Int, val message: String) : ApiResponse<Nothing>()
     data class Exception(val exception: Throwable) : ApiResponse<Nothing>()
 }
 
-suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResponse<T> {
+suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResponse<T & Any> {
     return try {
         val response = apiCall()
 
         if (response.isSuccessful) {
             val body = response.body()
             if (body != null) {
-                ApiResponse.Success(body)
+                ApiResponse.Success(body, response.headers()["Link"] ?: null)
             } else {
                 ApiResponse.Error(response.code(), "Response body is null")
             }
