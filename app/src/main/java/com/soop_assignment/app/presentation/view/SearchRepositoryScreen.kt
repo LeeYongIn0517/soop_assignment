@@ -25,6 +25,7 @@ import com.soop_assignment.app.R
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
 import com.soop_assignment.app.presentation.viewmodel.SearchViewModel
+import com.soop_assignment.app.ui.component.CircularProgressItem
 import com.soop_assignment.app.ui.component.ErrorItem
 import com.soop_assignment.app.ui.theme.Typography
 import kotlinx.coroutines.flow.debounce
@@ -82,6 +83,10 @@ fun SearchRepositoryScreen(
                         code = uiState.value.errorMessage?.code,
                         message = uiState.value.errorMessage?.message
                     )
+                }
+
+                is LoadState.Loading -> {
+                    CircularProgressItem()
                 }
 
                 else -> {}

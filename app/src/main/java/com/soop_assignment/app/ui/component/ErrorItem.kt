@@ -15,8 +15,8 @@ import com.soop_assignment.app.ui.theme.Typography
 
 @Composable
 fun ErrorItem(code: Int?, message: String?) {
-    val errorCode = code ?: "400"
-    val errorMessage = message ?: "예기치 않은 오류가 발생했습니다."
+    val errorCode = code ?: ""
+    val errorMessage = message ?: ""
     Column(
         modifier = Modifier.padding(horizontal = 15.dp).fillMaxSize(1f),
         verticalArrangement = Arrangement.Center,
