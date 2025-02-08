@@ -44,7 +44,7 @@ object NetworkModule {
             with(chain) {
                 val newRequest = request().newBuilder()
                     .addHeader("Accept", "application/vnd.github+json")
-                    .addHeader("Authorization", "${BuildConfig.TOKEN}")
+                    .addHeader("Authorization", "Bearer ${BuildConfig.TOKEN}")
                     .addHeader("X-GitHub-Api-Version", "2022-11-28")
                     .build()
                 proceed(newRequest)
