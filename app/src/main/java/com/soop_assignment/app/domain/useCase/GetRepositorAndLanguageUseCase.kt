@@ -9,6 +9,7 @@ import com.soop_assignment.app.domain.repository.GitHubRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class GetRepositoryAndLanguageUseCase @Inject constructor(private val repository: GitHubRepository) : BaseUseCase() {
@@ -41,28 +42,33 @@ class GetRepositoryAndLanguageUseCase @Inject constructor(private val repository
             }
 
             if (lastPage != null) {
-                val deferredRequest = (2..lastPage).map { page ->
-                    async { repository.getUserRepositories(userName, page) }
-                }
-                val responses = deferredRequest.awaitAll()
-
-                responses.forEach { response ->
-                    //중간 응답이 실패하더라도, 일단 그 다음 응답이 성공할 경우 레포지토리 수를 계산하도록 함
-                    when (response) {
-                        is ApiResponse.Success -> {
-                            repositories.addAll(response.data)
-                            isSuccess = true
+                (2..lastPage).chunked(5).forEach { batch ->
+                    val responses = batch.map { page ->
+                        async {
+                            delay(500)
+                            repository.getUserRepositories(userName, page)
                         }
+                    }.awaitAll()
 
-                        is ApiResponse.Error -> {
-                            error = ErrorMessage(response.code, response.message)
-                        }
+                    responses.forEach { response ->
+                        //중간 응답이 실패하더라도, 일단 그 다음 응답이 성공할 경우 레포지토리 수를 계산하도록 함
+                        when (response) {
+                            is ApiResponse.Success -> {
+                                repositories.addAll(response.data)
+                                isSuccess = true
+                            }
 
-                        is ApiResponse.Exception -> {
-                            throwable = Exception(response.exception)
+                            is ApiResponse.Error -> {
+                                error = ErrorMessage(response.code, response.message)
+                            }
+
+                            is ApiResponse.Exception -> {
+                                throwable = Exception(response.exception)
+                            }
                         }
                     }
                 }
+
             }
         }
 
@@ -74,7 +80,7 @@ class GetRepositoryAndLanguageUseCase @Inject constructor(private val repository
                 ), null
             )
         } else if (error != null) {
-            ApiResponse.Error(code = error?.code ?: 400, message = error?.message ?: "예기치 못한 오류가 발생했습니다:(")
+            ApiResponse.Error(code = error?.code ?: 500, message = error?.message ?: "예기치 못한 오류가 발생했습니다:(")
         } else {
             ApiResponse.Exception(throwable ?: Throwable())
         }
