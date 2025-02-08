@@ -46,6 +46,7 @@ object NetworkModule {
                     .addHeader("Accept", "application/vnd.github+json")
                     .addHeader("Authorization", "Bearer ${BuildConfig.TOKEN}")
                     .addHeader("X-GitHub-Api-Version", "2022-11-28")
+                    .addHeader("User-Agent", "com.soop_assignment.app/1.0 (github.com/LeeYongIn0517)")
                     .build()
                 proceed(newRequest)
             }
