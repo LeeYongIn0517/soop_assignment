@@ -27,9 +27,9 @@ class RepositoryViewModel @Inject constructor(
         when (event) {
             is RepositoryEvent.GetRepository -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    getRepository(userName = event.userName, repository = event.repository)
-                    getUser(event.userName)
-                    getRepositoryCountsAndLanguage(event.userName)
+                    launch { getRepository(userName = event.userName, repository = event.repository) }
+                    launch { getUser(event.userName) }
+                    launch { getRepositoryCountsAndLanguage(event.userName) }
                 }
             }
 
