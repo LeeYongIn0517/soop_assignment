@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetRepositoryUseCase @Inject constructor(private val gitHubRepository: GitHubRepository) : BaseUseCase() {
     suspend operator fun invoke(userName: String, repo: String): ApiResponse<SpecificRepo> {
         val response = gitHubRepository.getRepository(userName, repo)
-        return response.mapResponse { repoMetaData ->
+        return response.mapResponse { repoMetaData, linkHeader ->
             SpecificRepo(
                 userImageUrl = repoMetaData.owner.avatarUrl,
                 repositoryName = repoMetaData.name,

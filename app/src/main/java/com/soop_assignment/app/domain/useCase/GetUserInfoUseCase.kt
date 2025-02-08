@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetUserInfoUseCase @Inject constructor(private val repository: GitHubRepository) : BaseUseCase() {
     suspend operator fun invoke(userName: String): ApiResponse<User> {
         val ownerDataResponse = repository.getUserInfo(userName)
-        return ownerDataResponse.mapResponse { ownerData ->
+        return ownerDataResponse.mapResponse { ownerData, linkHeader ->
             User(
                 userImageUrl = ownerData.avatarUrl,
                 userName = ownerData.login,

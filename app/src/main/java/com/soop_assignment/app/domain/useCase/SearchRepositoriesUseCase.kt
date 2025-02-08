@@ -10,7 +10,7 @@ class SearchRepositoriesUseCase @Inject constructor(private val gitHubRepository
     suspend operator fun invoke(query: String, page: Int): ApiResponse<List<BriefRepo>> {
         val response = gitHubRepository.searchRepositories(query = query, page = page)
 
-        return response.mapResponse { data ->
+        return response.mapResponse { data, linkHeader ->
             data.items?.toBriefRepoList() ?: emptyList()
         }
     }
