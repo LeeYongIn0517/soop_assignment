@@ -1,12 +1,13 @@
 package com.soop_assignment.app.domain.model
 
-enum class ErrorType(val code: Int, val message: String) {
-    E301(301, "요청하신 페이지가 새 위치로 이동되었습니다."), E304(304, "변경된 내용이 없습니다."), E403(
-        403,
-        "보조 트래픽률 제한을 초과했습니다. 몇 분 후 다시 시도해주세요."
-    ),
-    E404(404, "요청하신 정보를 찾을 수 없습니다."), E422(422, "요청을 처리할 수 없습니다. 입력값을 확인해주세요."), E503(
-        503,
-        "현재 서비스를 이용할 수 없습니다. 잠시 후 다시 시도해주세요."
+object ErrorType {
+    private val errorMap = mapOf(
+        301 to "리다이렉션 오류",
+        304 to "캐시된 응답을 사용하세요",
+        403 to "접근 권한이 없습니다",
+        404 to "요청한 리소스를 찾을 수 없습니다",
+        503 to "서비스가 일시적으로 중단되었습니다"
     )
+
+    fun fromCode(code: Int): String = errorMap[code] ?: "예기치 않은 오류가 발생했습니다:("
 }
