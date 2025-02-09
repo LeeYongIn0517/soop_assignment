@@ -76,6 +76,8 @@ Debounce 기법을 적용하여 <u>연속적인 입력 중 특정 시간(700ms) 
 
 **< 중요 코드 >**
 
+presentation/view/SearchRepositoryScreen.kt
+
 ```kotlin
 val searchWord = remember { mutableStateOf(uiState.value.searchInput) }
 val searchResult = viewModel.getSearchPagingResult(uiState.value.searchInput)?.collectAsLazyPagingItems()
@@ -114,6 +116,8 @@ Scaffold(
 
 **< 중요 코드 >**
 
+presentation/viewmodel/RepositoryViewmodel.kt
+
 ```kotlin
 override fun handleEvent(event: RepositoryEvent) {
     when (event) {
@@ -147,16 +151,6 @@ private suspend fun getUser(userName: String) {
 
 ## UI 최적화
 
-### strong skipping mode 적용
-
-**< 적용 배경 >**
-
-불필요한 리컴포지션을 방지하기 위해 Strong Skipping Mode를 적용하였으며, 이를 위해 Kotlin Compiler 1.5.7 버전을 사용했습니다.
-
-**< 고려 사항 >**
-
-Strong Skipping Mode가 예상과 다르게 동작할 가능성이 있어, 반복적인 테스트를 통해 정상적으로 동작하는지 검증했습니다.
-
 ### pager key값 적용
 
 **< 적용 배경 >**
@@ -170,7 +164,9 @@ Strong Skipping Mode가 예상과 다르게 동작할 가능성이 있어, 반�
 1. key값의 고유성을 위해서 'userName/repositoryName' 형태로 key를 생성하였습니다.
 2. searchResult[index]가 null일 경우 'unknown_user_{index}/unknown_repo_{index}'를 key로 설정하여 중복 key값으로 인한 오류를 방지하였습니다.
 
-3. **< 중요 코드 >**
+**< 중요 코드 >**
+
+presentation/view/SearchRepositoryScreen.kt
 
 ```kotlin
 LazyColumn(modifier = Modifier.padding(innerPadding)) {
@@ -181,9 +177,20 @@ LazyColumn(modifier = Modifier.padding(innerPadding)) {
             val repoName = searchResult[index]?.repositoryName ?: "unknown_repo_$index"
             "$userName/$repoName"
         }) { index ->
+        //...중략
     }
 }
 ```
+
+### strong skipping mode 적용
+
+**< 적용 배경 >**
+
+불필요한 리컴포지션을 방지하기 위해 Strong Skipping Mode를 적용하였으며, 이를 위해 Kotlin Compiler 1.5.7 버전을 사용했습니다.
+
+**< 고려 사항 >**
+
+Strong Skipping Mode가 예상과 다르게 동작할 가능성이 있어, 반복적인 테스트를 통해 정상적으로 동작하는지 검증했습니다.
 
 # 그 외 고려사항
 
