@@ -39,12 +39,19 @@ app
 **< 적용 배경 >**
 
 MVI (Model-View-Intent) 패턴을 적용하여 이벤트, 상태, 효과를 명확하게 분리하고, 일관된 UI 상태 흐름을 유지하도록 했습니다.
+BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화하고, 각 Viewmodel에서 일관된 방식으로 이벤트, 상태, 효과를 관리할 수 있도록 했습니다.
 
 **< 고려 사항 >**
 
 1. 명확한 사용자 이벤트 정의: sealed interface를 활용하여 Screen에서 Viewmodel로 전달되는 이벤트를 정의했습니다.
 2. 상태 관리 최적화: StateFlow를 활용하여 UI가 항상 최신 상태를 구독하도록 설정하였습니다.
 3. 사이드 이펙트 정의 및 관리: sealed interface를 활용하여 Viewmodel에서 Screen으로 전달되는 사이드 이펙트를 정의했습니다.
+
+**< 예시 코드 >**
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt](UiContract.kt)
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt](BaseViewmodel.kt)
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/RepositoryContract.kt](RepositoryContract.kt)
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt](RepositoryViewmodel.kt)
 
 # 3. 성능 최적화
 
@@ -72,7 +79,7 @@ MVI (Model-View-Intent) 패턴을 적용하여 이벤트, 상태, 효과를 명�
 
 **< 중요 코드 >**
 
-domain/useCase/GetRepositoryAndLanguageUseCase.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/useCase/GetRepositorAndLanguageUseCase.kt](GetRepositoryAndLanguageUseCase.kt)
 
 ```kotlin
 (2..lastPage).chunked(5).forEach { batch -> //5개의 페이지씩 병렬요청
@@ -118,7 +125,7 @@ Debounce 기법을 적용하여 <u>연속적인 입력 중 특정 시간(700ms) 
 
 **< 중요 코드 >**
 
-presentation/view/SearchRepositoryScreen.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/SearchRepositoryScreen.kt](SearchRepositoryScreen.kt)
 
 ```kotlin
 val searchWord = remember { mutableStateOf(uiState.value.searchInput) }
@@ -158,7 +165,7 @@ Scaffold(
 
 **< 중요 코드 >**
 
-presentation/viewmodel/RepositoryViewmodel.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt](RepositoryViewmodel.kt)
 
 ```kotlin
 override fun handleEvent(event: RepositoryEvent) {
@@ -208,7 +215,7 @@ private suspend fun getUser(userName: String) {
 
 **< 중요 코드 >**
 
-presentation/view/SearchRepositoryScreen.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/SearchRepositoryScreen.kt](SearchRepositoryScreen.kt)
 
 ```kotlin
 LazyColumn(modifier = Modifier.padding(innerPadding)) {
@@ -250,7 +257,7 @@ API 응답 처리의 일관성을 유지하기 위해 네트워크 요청의 성
 
 **< 중요 코드 >**
 
-domain/entity/entity.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/data/entity/ErrorType.kt](ErrorType.kt)
 
 사용한 API에서 발생할 수 있는 특정 에러 코드만 매핑했습니다.
 
@@ -268,7 +275,7 @@ object ErrorType {
 }
 ```
 
-domain/entity/ApiResponse.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/data/entity/ErrorType.kt](ApiResponse.kt)
 
 ```kotlin
 sealed class ApiResponse<out T> {
@@ -302,7 +309,7 @@ suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResponse<T> 
 }
 ```
 
-domain/Util.kt
+[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/Util.kt](Util.kt)
 
 페이징 API 사용시 필요한 nextPage, lastPage 값을 Link로부터 파싱합니다.
 
