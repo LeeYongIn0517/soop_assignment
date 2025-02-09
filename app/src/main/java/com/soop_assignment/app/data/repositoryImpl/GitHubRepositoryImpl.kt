@@ -2,7 +2,6 @@ package com.soop_assignment.app.data.repositoryImpl
 
 import com.soop_assignment.app.data.entity.*
 import com.soop_assignment.app.data.service.GitHubApiService
-import com.soop_assignment.app.domain.entity.*
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject
 
