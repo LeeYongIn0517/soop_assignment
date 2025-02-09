@@ -1,6 +1,5 @@
 package com.soop_assignment.app.domain.entity
 
-import com.soop_assignment.app.domain.model.ErrorType
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException

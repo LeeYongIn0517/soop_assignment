@@ -1,4 +1,4 @@
-package com.soop_assignment.app.domain.model
+package com.soop_assignment.app.domain.entity
 
 object ErrorType {
     private val errorMap = mapOf(
