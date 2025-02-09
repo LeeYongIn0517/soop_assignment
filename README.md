@@ -38,28 +38,68 @@ app
 
 | <img src="./SearchScreen.png" width=250 height = 500/> |<img src="./RepositoryScreen.png" width=250 height = 500/> | <img src="./UserBottomSheet.png" width=250 height = 500/> |
 
-# 2. 성능 최적화 - 비동기 처리
+# 2. 패턴
+
+### MVI 패턴 적용
+
+**< 적용 배경 >**
+
+MVI (Model-View-Intent) 패턴을 적용하여 이벤트, 상태, 효과를 명확하게 분리하고, 일관된 UI 상태 흐름을 유지하도록 했습니다.
+
+BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화하고, 각 Viewmodel에서 일관된 방식으로 이벤트, 상태, 효과를 관리할 수 있도록 했습니다.
+
+**< 고려 사항 >**
+
+1. 명확한 사용자 이벤트 정의: sealed interface를 활용하여 Screen에서 Viewmodel로 전달되는 이벤트를 정의했습니다.
+2. 상태 관리 최적화: StateFlow를 활용하여 UI가 항상 최신 상태를 구독하도록 설정하였습니다.
+3. 사이드 이펙트 정의 및 관리: sealed interface를 활용하여 Viewmodel에서 Screen으로 전달되는 사이드 이펙트를 정의했습니다.
+
+**< 객체 및 파일 별 역할>**
+
+레포지토리 상세화면에 사용된 RepositoryScreen, RepositoryContract, RepositoryViewmodel을 예시로 든 역할입니다.
+
+- [UiContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt)
+
+  MVI패턴 공통 인터페이스(Event, State, Effect)
+
+- [BaseViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt)
+
+  MVI 패턴을 기반으로 한 공통로직이 추상화된 ViewModel를 정의합니다.
+
+- [RepositoryContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/RepositoryContract.kt)
+
+  UiContract.kt를 확장하여 Repository 상세화면 관련 이벤트, 상태, 효과를 정의합니다.
+
+- [RepositoryViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt)
+
+  Repository 상세 화면을 위한 뷰모델입니다.
+
+- [RepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/RepositoryScreen.kt)
+
+  RepositoryViewmodel의 uiState를 구독하여 화면 업데이트를 합니다.<br>뷰모델의 handleEvent() 메소드를 사용하여 입력 이벤트를 Viewmodel로 전달합니다.<br>
+  LaunchedEffect()를 사용하여 네비게이션 이벤트 등 UiEffect를 처리합니다.
+
+# 3. 성능 최적화 - 비동기 처리
 
 ## Github API 요청 비동기 병렬처리를 통한 2차 속도 제한 오류(403: Secondary Rate Limit) 방지
 
 **< 적용 배경 >**
 
-상세페이지에서 사용자의 사용 언어 리스트, 총 레포지토리 개수를 노출하기 위해서 <u>사용자의 레포지토리 리스트 조회 API에 적용</u>했습니다.<br>
-해당 API는 페이징 처리되어 있어, 첫 페이지부터 마지막 페이지까지 요청을 보낸
-후 전체 레포지토리의 수와 사용된 언어를 구하는 방식으로 구현했습니다.
+상세페이지에서 사용자의 사용 언어 리스트, 총 레포지토리 개수를 노출하기 위해서 **사용자의 레포지토리 리스트 조회 API를 호출하고 결과를 받는 객체에 적용**했습니다.<br>
+해당 API는 페이징 처리되어 있어, 첫 페이지부터 마지막 페이지까지 요청을 보낸 후 전체 레포지토리의 수와 사용된 언어를 구하는 방식으로 구현했습니다.
 
 이
 로직은 [GetRepositoryAndLanguageUseCase.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/useCase/GetRepositorAndLanguageUseCase.kt)
-에서 구현되었으며, <u>연속 API 요청을 최소 1회, 최대 100회 수행</u>해야 했습니다.
-<u>이 과정에서 API 요청이 잦아지면서 GitHub 속도 제한 오류가 발생하여 개선하게 되었습니다.</u>
+에서 구현되었으며, **연속 API 요청을 최소 1회, 최대 100회 수행**해야 했습니다.
+**이 과정에서 API 요청이 잦아지면서 GitHub 속도 제한 오류가 발생하여 개선하게 되었습니다.**
 
 따라서 GitHub API 요청을 비동기 병렬 처리하여, 속도 제한 오류를 예방하고 발생 확률을 줄이는 방식을 적용하게 되었습니다.
 
 **< 고려 사항 >**
 
-1. <u>5개씩 페이지 요청을 묶어(chunked) 병렬 실행</u>하여 한 번에 너무 많은 요청이 전달되지 않도록 조정했습니다.
-2. <u>비동기 요청`async`을 수행할 때, 각 요청 간 `500ms` 딜레이를 추가</u>해 속도 제한을 피했습니다.
-3. <u>일부 요청이 실패해도 전체 요청이 중단되지 않도록 설계</u>하여 가능한 많은 데이터를 확보할 수 있도록 했습니다.
+1. **5개씩 페이지 요청을 묶어(chunked) 병렬 실행**하여 한 번에 너무 많은 요청이 전달되지 않도록 조정했습니다.
+2. **비동기 요청`async`을 수행할 때, 각 요청 간 `500ms` 딜레이를 추가해 속도 제한을 피했습니다.**
+3. 일부 요청이 실패해도 전체 요청이 중단되지 않도록 설계하여 가능한 많은 데이터를 확보할 수 있도록 했습니다.
 
 **< 중요 코드 >**
 
@@ -100,7 +140,7 @@ app
 
 SearchBar의 쿼리가 바뀔 때마다 API 요청이 실행되면서 불필요한 요청이 쌓이는 문제를 개선했습니다.
 
-Debounce 기법을 적용하여 <u>연속적인 입력 중 특정 시간(700ms) 동안 변화가 없을 때만 API 요청을 보내도록 최적화</u>했습니다.
+Debounce 기법을 적용하여 **연속적인 입력 중 특정 시간(700ms) 동안 변화가 없을 때만 API 요청을 보내도록 최적화**했습니다.
 
 **< 고려 사항 >**
 
@@ -142,8 +182,8 @@ Scaffold(
 **< 적용 배경 >**
 
 상세 페이지에서 데이터 초기화에 총 세 가지 API 요청을 사용했습니다.<br>
-<u>단일 레포지토리 조회, 레포지토리 리스트 조회, 사용자 정보 조회는 서로 의존성이 없는 독립적인 suspend 함수이므로, 각각 별도의
-코루틴에서 실행하여 병렬로 처리했습니다.</u> <br>
+**단일 레포지토리 조회, 레포지토리 리스트 조회, 사용자 정보 조회는 서로 의존성이 없는 독립적인 suspend 함수이므로, 각각 별도의
+코루틴에서 실행하여 병렬로 처리했습니다.** <br>
 이를 통해 전체적인 응답 시간을 효과적으로 단축할 수 있었습니다.
 
 **< 고려 사항 >**
@@ -185,7 +225,7 @@ private suspend fun getUser(userName: String) {
 }
 ```
 
-# 3. UI 최적화
+# 4. UI 최적화
 
 ## pager key값 적용
 
@@ -197,7 +237,7 @@ private suspend fun getUser(userName: String) {
 
 **< 고려 사항 >**
 
-1. key값의 고유성을 위해서 'userName/repositoryName' 형태로 key를 생성하였습니다.
+1. **key값의 고유성**을 위해서 'userName/repositoryName' 형태로 key를 생성하였습니다.
 2. searchResult[index]가 null일 경우 key값으로 'unknown_user_{index}/unknown_repo_{index}'를 설정하여 중복 key값으로 인한 오류를 방지하였습니다.
 
 **< 중요 코드 >**
@@ -230,7 +270,7 @@ LazyColumn(modifier = Modifier.padding(innerPadding)) {
 
 Strong Skipping Mode가 예상과 다르게 동작할 가능성이 있어, 반복적인 디바이스 테스트를 통해 정상적으로 동작하는지 검증했습니다.
 
-# 4. 그 외 고려사항
+# 5. 그 외 고려사항
 
 ## 응답 래퍼클래스 정의 및 에러코드 메세지 매핑
 
@@ -242,9 +282,8 @@ API 응답 처리의 일관성을 유지하기 위해 네트워크 요청의 성
 **< 고려 사항 >**
 
 1. **사용자 친화성 고려**: 응답으로 받은 에러 코드를 키 값으로 ErrorType의 한국어 메시지와 매핑하여 사용자 친화성을 높였습니다.
-2. **응답 헤더 Link 값 반환 고려**: <u>GitHub API 중 페이징 처리가 필요한 일부 엔드포인트를 사용하기 위해, 응답 헤더의 Link를 파싱하여 nextPage 및 lastPage 값을 추출해
-   활용했습니다.</u>
-   <br>이에 따라, 요청이 성공하면 제네릭 타입의 데이터뿐만 아니라 LinkHeader 문자열도 함께 반환하도록 설계했습니다.
+2. **응답 헤더 Link 값 반환 고려**: GitHub API 중 페이징 처리가 필요한 일부 엔드포인트를 사용하기 위해, **응답 헤더의 Link를 파싱하여 nextPage 및 lastPage 값을 추출**해
+   활용했습니다. 이에 따라, 요청이 성공하면 제네릭 타입의 데이터뿐만 아니라 LinkHeader 문자열도 함께 반환하도록 설계했습니다.
 
 **< 중요 코드 >**
 
@@ -331,44 +370,3 @@ fun extractLastKey(linkHeader: String): Int? {
     return nextKey
 }
 ```
-
-# 4. 패턴
-
-### MVI 패턴 적용
-
-**< 적용 배경 >**
-
-MVI (Model-View-Intent) 패턴을 적용하여 이벤트, 상태, 효과를 명확하게 분리하고, 일관된 UI 상태 흐름을 유지하도록 했습니다.
-
-BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화하고, 각 Viewmodel에서 일관된 방식으로 이벤트, 상태, 효과를 관리할 수 있도록 했습니다.
-
-**< 고려 사항 >**
-
-1. 명확한 사용자 이벤트 정의: sealed interface를 활용하여 Screen에서 Viewmodel로 전달되는 이벤트를 정의했습니다.
-2. 상태 관리 최적화: StateFlow를 활용하여 UI가 항상 최신 상태를 구독하도록 설정하였습니다.
-3. 사이드 이펙트 정의 및 관리: sealed interface를 활용하여 Viewmodel에서 Screen으로 전달되는 사이드 이펙트를 정의했습니다.
-
-**< 코드 >**
-
-README 파일의 가독성을 위해 아래 코드 대신 링크를 첨부합니다.
-
-[UiContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt)
-
-MVI패턴 공통 인터페이스(Event, State, Effect)
-
-[BaseViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt)
-
-MVI 패턴을 기반으로 한 공통 ViewModel 정의합니다.
-
-[RepositoryContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/RepositoryContract.kt)
-
-UiContract.kt를 확장하여 Repository 상세화면 관련 이벤트, 상태, 효과를 정의합니다.
-
-[RepositoryViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt)
-
-Repository 상세 화면을 위한 뷰모델입니다.
-
-[RepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/RepositoryScreen.kt)
-
-RepositoryViewmodel의 uiState를 구독하여 화면 업데이트를 합니다.<br>뷰모델의 handleEvent() 메소드를 사용하여 입력 이벤트를 Viewmodel로 전달합니다.<br>
-LaunchedEffect()를 사용하여 네비게이션 이벤트 등 UiEffect를 처리합니다.
