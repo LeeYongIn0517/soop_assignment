@@ -51,7 +51,7 @@ class GetRepositoryAndLanguageUseCase @Inject constructor(private val repository
                     }.awaitAll()
 
                     responses.forEach { response ->
-                        //중간 응답이 실패하더라도, 일단 그 다음 응답이 성공할 경우 레포지토리 수를 계산하도록 함
+                        //중간 응답이 실패하더라도 멈추지 않고, 일단 그 다음 응답이 성공할 경우 레포지토리 리스트를 갱신하도록 함
                         when (response) {
                             is ApiResponse.Success -> {
                                 repositories.addAll(response.data)
