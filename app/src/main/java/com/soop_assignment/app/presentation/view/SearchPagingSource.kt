@@ -2,7 +2,7 @@ package com.soop_assignment.app.presentation.view
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.soop_assignment.app.domain.entity.ApiResponse
+import com.soop_assignment.app.data.entity.ApiResponse
 import com.soop_assignment.app.domain.extractNextKey
 import com.soop_assignment.app.domain.model.BriefRepo
 import com.soop_assignment.app.domain.model.ErrorMessage

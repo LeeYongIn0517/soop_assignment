@@ -2,7 +2,7 @@ package com.soop_assignment.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soop_assignment.app.domain.entity.ApiResponse
+import com.soop_assignment.app.data.entity.ApiResponse
 import com.soop_assignment.app.domain.model.ErrorMessage
 import com.soop_assignment.app.presentation.contract.UiEffect
 import com.soop_assignment.app.presentation.contract.UiEvent

@@ -1,6 +1,6 @@
 package com.soop_assignment.app.domain.useCase
 
-import com.soop_assignment.app.domain.entity.ApiResponse
+import com.soop_assignment.app.data.entity.ApiResponse
 
 open class BaseUseCase {
     protected fun <T, R> ApiResponse<T>.mapResponse(

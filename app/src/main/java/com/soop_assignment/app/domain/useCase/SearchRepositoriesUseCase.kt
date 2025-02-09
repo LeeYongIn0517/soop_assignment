@@ -1,7 +1,7 @@
 package com.soop_assignment.app.domain.useCase
 
-import com.soop_assignment.app.domain.entity.ApiResponse
-import com.soop_assignment.app.domain.entity.RepoWithScore
+import com.soop_assignment.app.data.entity.ApiResponse
+import com.soop_assignment.app.data.entity.RepoWithScore
 import com.soop_assignment.app.domain.model.BriefRepo
 import com.soop_assignment.app.domain.repository.GitHubRepository
 import javax.inject.Inject

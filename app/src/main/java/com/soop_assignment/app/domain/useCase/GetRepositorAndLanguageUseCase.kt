@@ -1,7 +1,7 @@
 package com.soop_assignment.app.domain.useCase
 
-import com.soop_assignment.app.domain.entity.ApiResponse
-import com.soop_assignment.app.domain.entity.RepoWithoutScore
+import com.soop_assignment.app.data.entity.ApiResponse
+import com.soop_assignment.app.data.entity.RepoWithoutScore
 import com.soop_assignment.app.domain.extractLastKey
 import com.soop_assignment.app.domain.model.ErrorMessage
 import com.soop_assignment.app.domain.model.RepositoryCountsAndLanguage

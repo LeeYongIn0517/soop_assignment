@@ -1,4 +1,4 @@
-package com.soop_assignment.app.domain.entity
+package com.soop_assignment.app.data.entity
 
 import retrofit2.HttpException
 import retrofit2.Response

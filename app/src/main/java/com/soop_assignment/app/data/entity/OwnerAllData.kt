@@ -1,8 +1,8 @@
-package com.soop_assignment.app.domain.entity
+package com.soop_assignment.app.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class Owner(
+data class OwnerAllData(
     @SerializedName("login") val login: String,
     @SerializedName("id") val id: Long,
     @SerializedName("node_id") val nodeId: String,
@@ -19,5 +19,20 @@ data class Owner(
     @SerializedName("repos_url") val reposUrl: String,
     @SerializedName("events_url") val eventsUrl: String,
     @SerializedName("received_events_url") val receivedEventsUrl: String,
-    @SerializedName("site_admin") val siteAdmin: Boolean
+    @SerializedName("type") val type: String,
+    @SerializedName("site_admin") val siteAdmin: Boolean,
+    @SerializedName("name") val name: String?,
+    @SerializedName("company") val company: String?,
+    @SerializedName("blog") val blog: String?,
+    @SerializedName("location") val location: String?,
+    @SerializedName("email") val email: String?,
+    @SerializedName("hireable") val hireable: Boolean?,
+    @SerializedName("bio") val bio: String?,
+    @SerializedName("twitter_username") val twitterUsername: String?,
+    @SerializedName("public_repos") val publicRepos: Long,
+    @SerializedName("public_gists") val publicGists: Long,
+    @SerializedName("followers") val followers: Long,
+    @SerializedName("following") val following: Long,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String
 )

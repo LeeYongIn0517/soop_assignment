@@ -1,4 +1,4 @@
-package com.soop_assignment.app.domain.entity
+package com.soop_assignment.app.data.entity
 
 import com.google.gson.annotations.SerializedName
 

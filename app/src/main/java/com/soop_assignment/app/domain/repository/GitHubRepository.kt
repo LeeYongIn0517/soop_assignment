@@ -1,5 +1,6 @@
 package com.soop_assignment.app.domain.repository
 
+import com.soop_assignment.app.data.entity.*
 import com.soop_assignment.app.domain.entity.*
 
 interface GitHubRepository {
