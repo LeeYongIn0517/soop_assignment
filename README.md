@@ -48,10 +48,15 @@ BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화
 3. 사이드 이펙트 정의 및 관리: sealed interface를 활용하여 Viewmodel에서 Screen으로 전달되는 사이드 이펙트를 정의했습니다.
 
 **< 예시 코드 >**
+
 [UiContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt)
+
 [BaseViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt)
+
 [RepositoryContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/RepositoryContract.kt)
+
 [RepositoryViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt)
+
 [RepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/RepositoryScreen.kt)
 
 # 3. 성능 최적화
