@@ -1,4 +1,4 @@
-package com.soop_assignment.app
+package com.soop_assignment.app.presentation.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
