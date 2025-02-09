@@ -60,7 +60,7 @@ BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화
 
 - [UiContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt)
 
-  MVI패턴 공통 인터페이스(Event, State, Effect)
+  MVI패턴 공통 인터페이스(Event, State, Effect)입니다.
 
 - [BaseViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt)
 
@@ -72,12 +72,12 @@ BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화
 
 - [RepositoryViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt)
 
-  Repository 상세 화면을 위한 뷰모델입니다.
+  Repository 상세 화면을 위한 뷰모델입니다. 유스케이스 호출 결과를 받으며, handleEvent() 메소드를 통해 사용자 입력을 기반으로 상태변화 및 사이드이펙트 변화를 줍니다.
 
 - [RepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/RepositoryScreen.kt)
 
   RepositoryViewmodel의 uiState를 구독하여 화면 업데이트를 합니다.<br>뷰모델의 handleEvent() 메소드를 사용하여 입력 이벤트를 Viewmodel로 전달합니다.<br>
-  LaunchedEffect()를 사용하여 네비게이션 이벤트 등 UiEffect를 처리합니다.
+  LaunchedEffect()를 사용하여 UiEffect 값에 따른 동작을 처리합니다.
 
 # 3. 성능 최적화 - 비동기 처리
 
