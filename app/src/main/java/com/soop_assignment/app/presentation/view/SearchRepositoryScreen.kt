@@ -24,7 +24,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.soop_assignment.app.R
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEffect
 import com.soop_assignment.app.presentation.contract.SearchRepositoryEvent
-import com.soop_assignment.app.presentation.viewmodel.SearchViewModel
+import com.soop_assignment.app.presentation.viewmodel.SearchRepositoryViewModel
 import com.soop_assignment.app.ui.component.CircularProgressItem
 import com.soop_assignment.app.ui.component.ErrorItem
 import com.soop_assignment.app.ui.theme.Typography
@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.filter
 @Composable
 fun SearchRepositoryScreen(
     navigateToRepository: (userName: String, repository: String) -> Unit,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchRepositoryViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val searchWord = remember { mutableStateOf(uiState.value.searchInput) }

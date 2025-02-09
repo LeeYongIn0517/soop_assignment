@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val searchRepositoriesUseCase: SearchRepositoriesUseCase) :
+class SearchRepositoryViewModel @Inject constructor(private val searchRepositoriesUseCase: SearchRepositoriesUseCase) :
     BaseViewModel<SearchRepositoryEvent, SearchRepositoryState, SearchRepositoryEffect>() {
     val PAGE_SIZE = 30
 
