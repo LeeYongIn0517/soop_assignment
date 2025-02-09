@@ -48,10 +48,11 @@ BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화
 3. 사이드 이펙트 정의 및 관리: sealed interface를 활용하여 Viewmodel에서 Screen으로 전달되는 사이드 이펙트를 정의했습니다.
 
 **< 예시 코드 >**
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt](UiContract.kt)
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt](BaseViewmodel.kt)
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/RepositoryContract.kt](RepositoryContract.kt)
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt](RepositoryViewmodel.kt)
+[UiContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/UiContract.kt)
+[BaseViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/BaseViewmodel.kt)
+[RepositoryContract.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/contract/RepositoryContract.kt)
+[RepositoryViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt)
+[RepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/RepositoryScreen.kt)
 
 # 3. 성능 최적화
 
@@ -79,7 +80,7 @@ BaseViewModel 추상 클래스를 도입하여 공통된 MVI 로직을 캡슐화
 
 **< 중요 코드 >**
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/useCase/GetRepositorAndLanguageUseCase.kt](GetRepositoryAndLanguageUseCase.kt)
+[GetRepositoryAndLanguageUseCase.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/useCase/GetRepositorAndLanguageUseCase.kt)
 
 ```kotlin
 (2..lastPage).chunked(5).forEach { batch -> //5개의 페이지씩 병렬요청
@@ -125,7 +126,7 @@ Debounce 기법을 적용하여 <u>연속적인 입력 중 특정 시간(700ms) 
 
 **< 중요 코드 >**
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/SearchRepositoryScreen.kt](SearchRepositoryScreen.kt)
+[SearchRepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/SearchRepositoryScreen.kt)
 
 ```kotlin
 val searchWord = remember { mutableStateOf(uiState.value.searchInput) }
@@ -165,7 +166,7 @@ Scaffold(
 
 **< 중요 코드 >**
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt](RepositoryViewmodel.kt)
+[RepositoryViewmodel.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/viewmodel/RepositoryViewModel.kt)
 
 ```kotlin
 override fun handleEvent(event: RepositoryEvent) {
@@ -215,7 +216,7 @@ private suspend fun getUser(userName: String) {
 
 **< 중요 코드 >**
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/SearchRepositoryScreen.kt](SearchRepositoryScreen.kt)
+[SearchRepositoryScreen.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/presentation/view/SearchRepositoryScreen.kt)
 
 ```kotlin
 LazyColumn(modifier = Modifier.padding(innerPadding)) {
@@ -257,7 +258,7 @@ API 응답 처리의 일관성을 유지하기 위해 네트워크 요청의 성
 
 **< 중요 코드 >**
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/data/entity/ErrorType.kt](ErrorType.kt)
+[ErrorType.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/data/entity/ErrorType.kt)
 
 사용한 API에서 발생할 수 있는 특정 에러 코드만 매핑했습니다.
 
@@ -275,7 +276,7 @@ object ErrorType {
 }
 ```
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/data/entity/ErrorType.kt](ApiResponse.kt)
+[ApiResponse.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/data/entity/ApiResponse.kt)
 
 ```kotlin
 sealed class ApiResponse<out T> {
@@ -309,7 +310,7 @@ suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResponse<T> 
 }
 ```
 
-[https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/Util.kt](Util.kt)
+[Util.kt](https://github.com/LeeYongIn0517/soop_assignment/blob/master/app/src/main/java/com/soop_assignment/app/domain/Util.kt)
 
 페이징 API 사용시 필요한 nextPage, lastPage 값을 Link로부터 파싱합니다.
 
