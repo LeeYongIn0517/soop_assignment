@@ -105,7 +105,11 @@ fun SearchRepositoryScreen(
                 LazyColumn(modifier = Modifier.padding(innerPadding)) {
                     items(
                         searchResult.itemCount,
-                        key = { index -> "${searchResult[index]?.userName}/${searchResult[index]?.repositoryName}" }) { index ->
+                        key = { index ->
+                            val userName = searchResult[index]?.userName ?: "unknown_user_$index"
+                            val repoName = searchResult[index]?.repositoryName ?: "unknown_repo_$index"
+                            "$userName/$repoName"
+                        }) { index ->
                         val item = searchResult[index]
                         if (item != null) {
                             Column(
