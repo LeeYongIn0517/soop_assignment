@@ -11,14 +11,14 @@ sealed class ApiResponse<out T> {
     data class Exception(val exception: Throwable) : ApiResponse<Nothing>()
 }
 
-suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResponse<T & Any> {
+suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): ApiResponse<T> {
     return try {
         val response = apiCall()
 
         if (response.isSuccessful) {
             val body = response.body()
             if (body != null) {
-                ApiResponse.Success(body, response.headers()["Link"] ?: null)
+                ApiResponse.Success(body, response.headers()["Link"])
             } else {
                 ApiResponse.Error(response.code(), "Response body is null")
             }
