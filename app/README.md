@@ -167,18 +167,22 @@ Strong Skipping Mode가 예상과 다르게 동작할 가능성이 있어, 반�
 
 **< 고려 사항 >**
 
-key값의 고유성을 위해서 ${userName}/${repositoryName} 형태로 key를 생성하였습니다..
+1. key값의 고유성을 위해서 'userName/repositoryName' 형태로 key를 생성하였습니다.
+2. searchResult[index]가 null일 경우 'unknown_user_{index}/unknown_repo_{index}'를 key로 설정하여 중복 key값으로 인한 오류를 방지하였습니다.
 
-**< 중요 코드 >**
+3. **< 중요 코드 >**
 
 ```kotlin
 LazyColumn(modifier = Modifier.padding(innerPadding)) {
     items(
         searchResult.itemCount,
-        key = { index -> "${searchResult[index]?.userName}/${searchResult[index]?.repositoryName}" })
-    {
-        ...중략
+        key = { index ->
+            val userName = searchResult[index]?.userName ?: "unknown_user_$index"
+            val repoName = searchResult[index]?.repositoryName ?: "unknown_repo_$index"
+            "$userName/$repoName"
+        }) { index ->
     }
+}
 ```
 
 # 그 외 고려사항
