@@ -10,6 +10,7 @@ import com.soop_assignment.app.presentation.contract.RepositoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,37 +41,42 @@ class RepositoryViewModel @Inject constructor(
 
     private suspend fun getRepository(userName: String, repository: String) {
         val repositoryResult = getRepositoryUseCase(userName = userName, repo = repository)
-
-        handleError(apiResponse = repositoryResult) { isLoading, isError, errorMessage, data ->
-            //상태업데이트
-            when {
-                isError -> this.copy(isLoading, isError, errorMessage, repository = data)
-                data != null -> this.copy(isLoading, isError, errorMessage, repository = data)
-                else -> this
+        withContext(Dispatchers.Main) {
+            handleError(apiResponse = repositoryResult) { isLoading, isError, errorMessage, data ->
+                //상태업데이트
+                when {
+                    isError -> this.copy(isLoading, isError, errorMessage, repository = data)
+                    data != null -> this.copy(isLoading, isError, errorMessage, repository = data)
+                    else -> this
+                }
             }
         }
     }
 
     private suspend fun getUser(userName: String) {
         val userResult = getUserInfoUseCase(userName = userName)
-        handleError(apiResponse = userResult) { isLoading, isError, errorMessage, data ->
-            //상태업데이트
-            when {
-                isError -> this.copy(isLoading, isError, errorMessage, user = data) //에러
-                data != null -> this.copy(isLoading, isError, errorMessage, user = data) //성공
-                else -> this
+        withContext(Dispatchers.Main) {
+            handleError(apiResponse = userResult) { isLoading, isError, errorMessage, data ->
+                //상태업데이트
+                when {
+                    isError -> this.copy(isLoading, isError, errorMessage, user = data) //에러
+                    data != null -> this.copy(isLoading, isError, errorMessage, user = data) //성공
+                    else -> this
+                }
             }
         }
     }
 
     private suspend fun getRepositoryCountsAndLanguage(userName: String) {
         val result = getRepositoryAndLanguageUseCase(userName)
-        handleError(apiResponse = result) { isLoading, isError, errorMessage, data ->
-            //상태업데이트
-            when {
-                isError -> this.copy(isLoading, isError, errorMessage, repositoryAndLanguage = data)
-                data != null -> this.copy(isLoading, isError, errorMessage, repositoryAndLanguage = data)
-                else -> this
+        withContext(Dispatchers.Main) {
+            handleError(apiResponse = result) { isLoading, isError, errorMessage, data ->
+                //상태업데이트
+                when {
+                    isError -> this.copy(isLoading, isError, errorMessage, repositoryAndLanguage = data)
+                    data != null -> this.copy(isLoading, isError, errorMessage, repositoryAndLanguage = data)
+                    else -> this
+                }
             }
         }
     }
