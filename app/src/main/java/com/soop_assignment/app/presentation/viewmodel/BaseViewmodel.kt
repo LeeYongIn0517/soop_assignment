@@ -63,7 +63,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         apiResponse: ApiResponse<T>,
         reduce: State.(isLoading: Boolean, isError: Boolean, errorMessage: ErrorMessage?, data: T?) -> State
     ) {
-        val UNKNOWN_ERROR_CODE = 400
+        val UNKNOWN_ERROR_CODE = 500
         val UNKNOWN_ERROR_MESSAGE = "원인을 알 수 없는 오류입니다:("
 
         when (apiResponse) {
